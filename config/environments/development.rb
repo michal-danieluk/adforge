@@ -3,6 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Allow all hosts in development (disable host authorization check)
+  config.hosts.clear
+
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
@@ -38,7 +41,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.default_url_options = { host: "localhost", port: 20163 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
