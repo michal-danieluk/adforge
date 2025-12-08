@@ -33,8 +33,8 @@ rails db:migrate
 
 ### Running the Application
 ```bash
-bin/dev                    # Start web server + Tailwind watcher (via Procfile.dev)
-rails server               # Web server only
+bin/dev                    # Start web server (port 20163, IPv6) + Tailwind watcher (via Procfile.dev)
+rails server -b :: -p 20163  # Web server only on port 20163
 rails tailwindcss:watch    # Tailwind CSS watcher
 ```
 
