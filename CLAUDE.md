@@ -38,6 +38,10 @@ rails server -b :: -p 20163  # Web server only on port 20163
 rails tailwindcss:watch    # Tailwind CSS watcher
 ```
 
+**Important**: After pulling changes that affect JavaScript/views:
+- Hard refresh browser: `Ctrl+Shift+R` (Linux/Windows) or `Cmd+Shift+R` (Mac)
+- Or clear cache and do a hard reload
+
 ### Testing
 ```bash
 rails test                 # Run all tests
