@@ -19,13 +19,23 @@ export default class extends Controller {
 
     const wrapper = event.target.closest('.nested-fields')
 
-    // If the record is persisted, mark it for deletion
-    const destroyField = wrapper.querySelector('input[name*="_destroy"]')
-    if (destroyField) {
-      destroyField.value = '1'
-    }
+    // Check if this is a persisted record (has an ID field)
+    const idField = wrapper.querySelector('input[name*="[id]"]')
 
-    // Hide the wrapper instead of removing it (so Rails can process the _destroy)
-    wrapper.style.display = 'none'
+    if (idField && idField.value) {
+      // Persisted record - mark for deletion and hide
+      const destroyField = wrapper.querySelector('input[name*="_destroy"]')
+      if (destroyField) {
+        destroyField.value = '1'
+      }
+      // Use visibility instead of display to keep it in form submission
+      wrapper.style.visibility = 'hidden'
+      wrapper.style.position = 'absolute'
+      wrapper.style.height = '0'
+      wrapper.style.overflow = 'hidden'
+    } else {
+      // New record - just remove it from DOM
+      wrapper.remove()
+    }
   }
 }
