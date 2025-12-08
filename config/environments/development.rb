@@ -5,6 +5,8 @@ Rails.application.configure do
 
   # Allow all hosts in development (disable host authorization check)
   config.hosts.clear
+  config.hosts << "rails.bieda.it"
+  config.hosts << /.*\.bieda\.it/  # Allow all bieda.it subdomains
 
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
