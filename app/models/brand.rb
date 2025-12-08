@@ -9,9 +9,7 @@ class Brand < ApplicationRecord
   validates :tone_of_voice, presence: true, inclusion: { in: %w[professional casual friendly authoritative] }
 
   # Logo validations
-  validates :logo, content_type: { in: %w[image/png image/jpeg image/svg+xml], message: "must be a PNG, JPEG, or SVG" },
-                   size: { less_than: 5.megabytes, message: "must be less than 5MB" },
-                   if: :logo_attached?
+  validate :logo_validation, if: :logo_attached?
 
   # Custom validations
   validate :must_have_at_least_one_color
@@ -26,6 +24,20 @@ class Brand < ApplicationRecord
 
   def logo_attached?
     logo.attached?
+  end
+
+  def logo_validation
+    return unless logo.attached?
+
+    # Check content type
+    unless logo.content_type.in?(%w[image/png image/jpeg image/svg+xml])
+      errors.add(:logo, "must be a PNG, JPEG, or SVG")
+    end
+
+    # Check file size
+    if logo.byte_size > 5.megabytes
+      errors.add(:logo, "must be less than 5MB")
+    end
   end
 
   def must_have_at_least_one_color
