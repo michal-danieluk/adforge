@@ -5,20 +5,13 @@ export default class extends Controller {
   static targets = ["picker", "input"]
 
   connect() {
-    // Sync picker with input on load if input has a value
-    if (this.inputTarget.value) {
-      this.pickerTarget.value = this.inputTarget.value.toLowerCase()
-    } else {
-      // If no value, set default from picker
-      this.inputTarget.value = this.pickerTarget.value.toUpperCase()
-    }
+    // Ensure values are synced on load
+    this.syncFromInput()
   }
 
   // When color picker changes, update the text input
   updateInput(event) {
     this.inputTarget.value = event.target.value.toUpperCase()
-    // Trigger change event so Rails knows the field changed
-    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
   // When text input changes, update the color picker
@@ -36,6 +29,11 @@ export default class extends Controller {
       this.inputTarget.value = hexValue.toUpperCase()
     }
 
+    this.syncFromInput()
+  }
+
+  syncFromInput() {
+    const hexValue = this.inputTarget.value
     // Only update picker if it's a valid hex color
     if (/^#[0-9A-F]{6}$/i.test(hexValue)) {
       this.pickerTarget.value = hexValue.toLowerCase()

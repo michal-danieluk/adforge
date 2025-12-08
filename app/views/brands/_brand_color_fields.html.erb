@@ -1,16 +1,17 @@
+<% default_color = form.object.hex_value || '#FF5733' %>
 <div class="nested-fields mb-3 p-4 border border-gray-300 rounded-md bg-gray-50" data-controller="color-picker">
   <div class="flex items-center gap-4">
     <div class="flex-1">
       <%= form.label :hex_value, "Color (Hex)", class: "block text-sm font-medium text-gray-700 mb-1" %>
       <div class="flex gap-2 items-center">
         <input type="color"
-               value="<%= form.object.hex_value || '#FF5733' %>"
+               value="<%= default_color %>"
                data-color-picker-target="picker"
                data-action="input->color-picker#updateInput"
                class="h-10 w-16 rounded border-gray-300 cursor-pointer">
         <%= form.text_field :hex_value,
                             placeholder: "#FF5733",
-                            value: form.object.hex_value || '',
+                            value: default_color,
                             data: { color_picker_target: "input", action: "input->color-picker#updatePicker" },
                             class: "block shadow-sm rounded-md border border-gray-400 px-3 py-2 flex-1 uppercase" %>
       </div>
