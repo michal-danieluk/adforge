@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  brand: one
+  hex_value: MyString
+  primary: false
+
+two:
+  brand: two
+  hex_value: MyString
+  primary: false
