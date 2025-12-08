@@ -2,10 +2,15 @@
 
 one:
   brand: one
-  hex_value: MyString
-  primary: false
+  hex_value: "#FF5733"
+  primary: true
 
 two:
-  brand: two
-  hex_value: MyString
+  brand: one
+  hex_value: "#33FF57"
   primary: false
+
+three:
+  brand: two
+  hex_value: "#3357FF"
+  primary: true

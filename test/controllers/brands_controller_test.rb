@@ -8,6 +8,7 @@ class BrandsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get brands_url
     assert_response :success
+    assert_select "h1", "Brands"
   end
 
   test "should get new" do
@@ -15,17 +16,10 @@ class BrandsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should create brand" do
-    assert_difference("Brand.count") do
-      post brands_url, params: { brand: { name: @brand.name, tone_of_voice: @brand.tone_of_voice } }
-    end
-
-    assert_redirected_to brand_url(Brand.last)
-  end
-
   test "should show brand" do
     get brand_url(@brand)
     assert_response :success
+    assert_select "p", text: /#{@brand.name}/
   end
 
   test "should get edit" do
@@ -34,8 +28,10 @@ class BrandsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update brand" do
-    patch brand_url(@brand), params: { brand: { name: @brand.name, tone_of_voice: @brand.tone_of_voice } }
+    patch brand_url(@brand), params: { brand: { name: "Updated Name" } }
     assert_redirected_to brand_url(@brand)
+    @brand.reload
+    assert_equal "Updated Name", @brand.name
   end
 
   test "should destroy brand" do

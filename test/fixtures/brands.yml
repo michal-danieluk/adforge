@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  tone_of_voice: MyString
+  name: Test Brand One
+  tone_of_voice: professional
 
 two:
-  name: MyString
-  tone_of_voice: MyString
+  name: Test Brand Two
+  tone_of_voice: casual
