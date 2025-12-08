@@ -30,6 +30,8 @@ class BrandsController < ApplicationController
         format.html { redirect_to @brand, notice: "Brand was successfully created." }
         format.json { render :show, status: :created, location: @brand }
       else
+        # If validation fails and there are no colors, add one for the form
+        @brand.brand_colors.build(primary: true, hex_value: "#FF5733") if @brand.brand_colors.empty?
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @brand.errors, status: :unprocessable_entity }
       end

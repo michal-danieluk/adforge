@@ -2,7 +2,7 @@ class Brand < ApplicationRecord
   # Associations
   has_one_attached :logo
   has_many :brand_colors, dependent: :destroy
-  accepts_nested_attributes_for :brand_colors, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :brand_colors, allow_destroy: true
 
   # Validations
   validates :name, presence: true, length: { minimum: 2, maximum: 50 }
