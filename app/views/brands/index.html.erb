@@ -10,20 +10,55 @@
     <%= link_to "New brand", new_brand_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
   </div>
 
-  <div id="brands" class="min-w-full divide-y divide-gray-200 space-y-5">
+  <div class="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
     <% if @brands.any? %>
-      <% @brands.each do |brand| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render brand %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", brand, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_brand_path(brand), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", brand, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
-      <% end %>
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tone</th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Primary Color</th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Logo</th>
+            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          <% @brands.each do |brand| %>
+            <tr>
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                <%= link_to brand.name, brand, class: "hover:text-blue-600" %>
+              </td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                <%= brand.tone_of_voice %>
+              </td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded border border-gray-300" style="background-color: <%= brand.primary_color %>;"></div>
+                  <code class="text-xs"><%= brand.primary_color %></code>
+                </div>
+              </td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <% if brand.logo.attached? %>
+                  <%= image_tag brand.logo, class: "h-8 w-auto" %>
+                <% else %>
+                  <span class="text-gray-400 italic">No logo</span>
+                <% end %>
+              </td>
+              <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                <%= link_to "View", brand, class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                <%= link_to "Edit", edit_brand_path(brand), class: "text-blue-600 hover:text-blue-900 mr-4" %>
+                <%= button_to "Delete", brand, method: :delete, class: "text-red-600 hover:text-red-900 inline", data: { turbo_confirm: "Are you sure?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% else %>
-      <p class="text-center my-10">No brands found.</p>
+      <div class="text-center py-12 bg-white">
+        <p class="text-gray-500">No brands found. Create your first brand to get started!</p>
+      </div>
     <% end %>
   </div>
 </div>
