@@ -25,6 +25,18 @@ class BrandsController < ApplicationController
   def create
     @brand = Brand.new(brand_params)
 
+    # Debug logging
+    Rails.logger.info "="*60
+    Rails.logger.info "BRAND CREATE ATTEMPT"
+    Rails.logger.info "Params: #{brand_params.inspect}"
+    Rails.logger.info "Brand colors count: #{@brand.brand_colors.size}"
+    @brand.brand_colors.each_with_index do |c, i|
+      Rails.logger.info "  Color #{i}: #{c.hex_value} primary=#{c.primary} destroy=#{c.marked_for_destruction?}"
+    end
+    Rails.logger.info "Brand valid? #{@brand.valid?}"
+    Rails.logger.info "Brand errors: #{@brand.errors.full_messages}"
+    Rails.logger.info "="*60
+
     respond_to do |format|
       if @brand.save
         format.html { redirect_to @brand, notice: "Brand was successfully created." }
