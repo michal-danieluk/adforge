@@ -4,18 +4,21 @@
       <%= form.label :hex_value, "Color (Hex)", class: "block text-sm font-medium text-gray-700 mb-1" %>
       <div class="flex gap-2 items-center">
         <input type="color"
+               value="<%= form.object.hex_value || '#FF5733' %>"
                data-color-picker-target="picker"
                data-action="input->color-picker#updateInput"
                class="h-10 w-16 rounded border-gray-300 cursor-pointer">
         <%= form.text_field :hex_value,
                             placeholder: "#FF5733",
+                            value: form.object.hex_value || '',
                             data: { color_picker_target: "input", action: "input->color-picker#updatePicker" },
-                            class: "block shadow-sm rounded-md border border-gray-400 px-3 py-2 flex-1" %>
+                            class: "block shadow-sm rounded-md border border-gray-400 px-3 py-2 flex-1 uppercase" %>
       </div>
+      <p class="text-xs text-gray-500 mt-1">Type or paste hex color (e.g., #0006B1) or use the color picker</p>
     </div>
 
     <div class="flex items-center gap-2 mt-6">
-      <%= form.check_box :primary, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+      <%= form.check_box :primary, {class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5"}, "1", "0" %>
       <%= form.label :primary, "Primary", class: "text-sm font-medium text-gray-700" %>
     </div>
 

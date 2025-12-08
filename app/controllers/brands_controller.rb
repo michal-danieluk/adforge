@@ -13,8 +13,8 @@ class BrandsController < ApplicationController
   # GET /brands/new
   def new
     @brand = Brand.new
-    # Build one default color for the form
-    @brand.brand_colors.build
+    # Build one default color for the form with primary set to true
+    @brand.brand_colors.build(primary: true)
   end
 
   # GET /brands/1/edit
