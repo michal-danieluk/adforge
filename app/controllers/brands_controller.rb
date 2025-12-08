@@ -3,7 +3,7 @@ class BrandsController < ApplicationController
 
   # GET /brands or /brands.json
   def index
-    @brands = Brand.all
+    @brands = Brand.includes(:brand_colors).all
   end
 
   # GET /brands/1 or /brands/1.json
@@ -13,6 +13,8 @@ class BrandsController < ApplicationController
   # GET /brands/new
   def new
     @brand = Brand.new
+    # Build one default color for the form
+    @brand.brand_colors.build
   end
 
   # GET /brands/1/edit
@@ -65,6 +67,11 @@ class BrandsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def brand_params
-      params.expect(brand: [ :name, :tone_of_voice ])
+      params.expect(brand: [
+        :name,
+        :tone_of_voice,
+        :logo,
+        brand_colors_attributes: [ :id, :hex_value, :primary, :_destroy ]
+      ])
     end
 end
