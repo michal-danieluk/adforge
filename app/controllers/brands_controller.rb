@@ -81,11 +81,11 @@ class BrandsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def brand_params
-      params.expect(brand: [
+      params.require(:brand).permit(
         :name,
         :tone_of_voice,
         :logo,
         brand_colors_attributes: [ :id, :hex_value, :primary, :_destroy ]
-      ])
+      )
     end
 end
