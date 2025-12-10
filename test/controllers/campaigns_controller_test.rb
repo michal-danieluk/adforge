@@ -3,6 +3,7 @@ require "test_helper"
 class CampaignsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @campaign = campaigns(:one)
+    login_as(@campaign.brand.user)
   end
 
   test "should get index" do

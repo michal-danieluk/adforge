@@ -3,6 +3,7 @@ require "test_helper"
 class BrandsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @brand = brands(:one)
+    login_as(@brand.user)
   end
 
   test "should get index" do
