@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_10_222937) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_10_223023) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -53,6 +53,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_10_222937) do
     t.string "tone_of_voice"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_brands_on_user_id"
   end
 
   create_table "campaigns", force: :cascade do |t|
@@ -85,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_10_222937) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "brand_colors", "brands"
+  add_foreign_key "brands", "users"
   add_foreign_key "campaigns", "brands"
   add_foreign_key "sessions", "users"
 end

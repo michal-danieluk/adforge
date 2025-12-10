@@ -1,5 +1,6 @@
 class Brand < ApplicationRecord
   # Associations
+  belongs_to :user
   has_one_attached :logo
   has_many :brand_colors, dependent: :destroy
   has_many :campaigns, dependent: :destroy
