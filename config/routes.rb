@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   resources :campaigns
   resources :brands
 
+  # Dashboard
+  get "dashboard", to: "dashboard#index", as: :dashboard
+
   # Define root path
-  root "brands#index"
+  root "dashboard#index"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
