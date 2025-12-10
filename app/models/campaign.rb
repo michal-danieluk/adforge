@@ -1,6 +1,7 @@
 class Campaign < ApplicationRecord
   # Associations
   belongs_to :brand
+  has_many :creatives, dependent: :destroy
 
   # Delegations
   delegate :primary_color, to: :brand, prefix: true

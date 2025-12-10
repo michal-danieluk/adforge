@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_10_223023) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_10_225209) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -67,6 +67,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_10_223023) do
     t.index ["brand_id"], name: "index_campaigns_on_brand_id"
   end
 
+  create_table "creatives", force: :cascade do |t|
+    t.integer "campaign_id", null: false
+    t.text "ad_copy"
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_creatives_on_campaign_id"
+    t.index ["status"], name: "index_creatives_on_status"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -89,5 +99,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_10_223023) do
   add_foreign_key "brand_colors", "brands"
   add_foreign_key "brands", "users"
   add_foreign_key "campaigns", "brands"
+  add_foreign_key "creatives", "campaigns"
   add_foreign_key "sessions", "users"
 end
