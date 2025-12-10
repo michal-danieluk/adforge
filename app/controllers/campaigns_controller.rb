@@ -9,6 +9,7 @@ class CampaignsController < ApplicationController
 
   # GET /campaigns/1 or /campaigns/1.json
   def show
+    @recent_creatives = @campaign.creatives.successful.recent.limit(3)
   end
 
   # GET /campaigns/new
