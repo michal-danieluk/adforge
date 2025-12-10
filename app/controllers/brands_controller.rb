@@ -8,6 +8,7 @@ class BrandsController < ApplicationController
 
   # GET /brands/1 or /brands/1.json
   def show
+    @recent_campaigns = @brand.campaigns.order(created_at: :desc).limit(5)
   end
 
   # GET /brands/new

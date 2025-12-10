@@ -12,4 +12,30 @@
   <%= link_to "Edit this brand", edit_brand_path(@brand), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
   <%= link_to "Back to brands", brands_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
   <%= button_to "Destroy this brand", @brand, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+
+  <div class="mt-12 pt-8 border-t border-gray-200">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-bold text-2xl">Campaigns</h2>
+      <%= link_to "New Campaign", new_campaign_path(brand_id: @brand.id), class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium text-sm" %>
+    </div>
+
+    <% if @recent_campaigns.any? %>
+      <div class="space-y-3">
+        <% @recent_campaigns.each do |campaign| %>
+          <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+            <%= link_to campaign.product_name, campaign, class: "font-medium text-blue-600 hover:underline" %>
+            <p class="text-sm text-gray-600 mt-1"><%= campaign.target_audience %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @brand.campaigns.count > 5 %>
+        <div class="mt-4 text-center">
+          <%= link_to "View all #{@brand.campaigns.count} campaigns", campaigns_path(brand_id: @brand.id), class: "text-blue-600 hover:underline text-sm" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-gray-600 text-center py-8">No campaigns yet. Create your first campaign for this brand!</p>
+    <% end %>
+  </div>
 </div>
