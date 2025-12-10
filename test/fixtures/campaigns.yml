@@ -2,12 +2,12 @@
 
 one:
   brand: one
-  product_name: MyString
-  target_audience: MyString
-  description: MyText
+  product_name: Organic Coffee Beans
+  target_audience: Health-conscious millennials
+  description: Premium organic coffee from sustainable farms
 
 two:
   brand: two
-  product_name: MyString
-  target_audience: MyString
-  description: MyText
+  product_name: Eco-Friendly Water Bottles
+  target_audience: Environmentally aware consumers
+  description: Reusable bottles made from recycled materials
