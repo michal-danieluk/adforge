@@ -13,6 +13,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns/new
   def new
     @campaign = Campaign.new
+    @campaign.brand_id = params[:brand_id] if params[:brand_id]
   end
 
   # GET /campaigns/1/edit
