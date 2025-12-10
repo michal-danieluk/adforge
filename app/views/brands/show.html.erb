@@ -9,33 +9,44 @@
 
   <%= render @brand %>
 
-  <%= link_to "Edit this brand", edit_brand_path(@brand), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to brands", brands_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= button_to "Destroy this brand", @brand, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+  <div class="mt-8 flex flex-wrap gap-2">
+    <%= link_to "Edit Brand", edit_brand_path(@brand), class: "rounded-md px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium text-sm transition-colors" %>
+    <%= link_to "← Back to Brands", brands_path, class: "rounded-md px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium text-sm transition-colors" %>
+    <%= button_to "Delete Brand", @brand, method: :delete, form_class: "inline-block", class: "rounded-md px-4 py-2 text-white bg-red-600 hover:bg-red-700 font-medium text-sm cursor-pointer transition-colors", data: { turbo_confirm: "Are you sure you want to delete this brand and all its campaigns?" } %>
+  </div>
 
   <div class="mt-12 pt-8 border-t border-gray-200">
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-bold text-2xl">Campaigns</h2>
-      <%= link_to "New Campaign", new_campaign_path(brand_id: @brand.id), class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium text-sm" %>
+      <h2 class="font-bold text-2xl text-gray-900">Campaigns</h2>
+      <%= link_to new_campaign_path(brand_id: @brand.id), class: "rounded-md px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" do %>
+        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        New Campaign
+      <% end %>
     </div>
 
     <% if @recent_campaigns.any? %>
       <div class="space-y-3">
         <% @recent_campaigns.each do |campaign| %>
-          <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
-            <%= link_to campaign.product_name, campaign, class: "font-medium text-blue-600 hover:underline" %>
+          <%= link_to campaign, class: "block border border-gray-200 rounded-lg p-4 hover:border-blue-200 hover:bg-gray-50 transition-all" do %>
+            <div class="font-medium text-gray-900"><%= campaign.product_name %></div>
             <p class="text-sm text-gray-600 mt-1"><%= campaign.target_audience %></p>
-          </div>
+            <p class="text-xs text-gray-400 mt-1"><%= time_ago_in_words(campaign.created_at) %> ago</p>
+          <% end %>
         <% end %>
       </div>
 
       <% if @brand.campaigns.count > 5 %>
         <div class="mt-4 text-center">
-          <%= link_to "View all #{@brand.campaigns.count} campaigns", campaigns_path(brand_id: @brand.id), class: "text-blue-600 hover:underline text-sm" %>
+          <%= link_to "View all #{@brand.campaigns.count} campaigns →", campaigns_path, class: "text-blue-600 hover:text-blue-700 font-medium text-sm" %>
         </div>
       <% end %>
     <% else %>
-      <p class="text-gray-600 text-center py-8">No campaigns yet. Create your first campaign for this brand!</p>
+      <div class="text-center py-12">
+        <p class="text-gray-500 mb-4">No campaigns yet for this brand</p>
+        <%= link_to "Create First Campaign", new_campaign_path(brand_id: @brand.id), class: "inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
+      </div>
     <% end %>
   </div>
 </div>
