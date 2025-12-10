@@ -2,7 +2,15 @@ Rails.application.routes.draw do
   resource :session
   resource :registration, only: [:new, :create]
   resources :passwords, param: :token
-  resources :campaigns
+
+  # Campaigns with nested Creatives
+  resources :campaigns do
+    resources :creatives, only: [:index, :show, :create, :destroy]
+  end
+
+  # Direct route for downloading creatives
+  get "creatives/:id/download", to: "creatives#download", as: :download_creative
+
   resources :brands
 
   # Dashboard
