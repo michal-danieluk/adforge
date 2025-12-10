@@ -1,0 +1,111 @@
+<div class="max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">
+        Ads for <%= @campaign.product_name %>
+      </h1>
+      <p class="text-gray-600 mt-1 text-sm">
+        <%= link_to @campaign.brand.name, @campaign.brand, class: "text-blue-600 hover:underline" %> ·
+        <%= link_to "Campaign Details", @campaign, class: "text-blue-600 hover:underline" %>
+      </p>
+    </div>
+
+    <%= button_to "Generate New Ad",
+                  campaign_creatives_path(@campaign),
+                  method: :post,
+                  class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm transition-colors inline-flex items-center" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Generate New Ad
+    <% end %>
+  </div>
+
+  <!-- Grid of Creatives -->
+  <% if @creatives.empty? %>
+    <!-- Empty State -->
+    <div class="text-center py-16 px-4 bg-white rounded-lg shadow-sm border border-gray-200">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <h3 class="mt-4 text-lg font-semibold text-gray-900">
+        No ads generated yet
+      </h3>
+      <p class="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
+        Click "Generate New Ad" to create your first AI-powered social media ad.
+        It takes about 30 seconds.
+      </p>
+      <%= button_to "Generate First Ad",
+                    campaign_creatives_path(@campaign),
+                    method: :post,
+                    class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" do %>
+        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Generate First Ad
+      <% end %>
+      <p class="mt-4 text-xs text-gray-400">
+        AI-powered ads that match your brand perfectly
+      </p>
+    </div>
+  <% else %>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @creatives.each do |creative| %>
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:border-blue-200 transition-all">
+          <%= link_to campaign_creative_path(@campaign, creative), class: "block" do %>
+            <!-- Image Thumbnail -->
+            <div class="aspect-square bg-gray-100 relative">
+              <% if creative.final_image.attached? %>
+                <%= image_tag creative.final_image.variant(resize_to_limit: [400, 400]),
+                              class: "w-full h-full object-cover" %>
+              <% elsif creative.generating? || creative.pending? %>
+                <div class="w-full h-full flex items-center justify-center">
+                  <svg class="animate-spin h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              <% else %>
+                <div class="w-full h-full flex items-center justify-center">
+                  <svg class="h-8 w-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Info -->
+            <div class="p-4">
+              <p class="text-sm text-gray-500">
+                Created <%= time_ago_in_words(creative.created_at) %> ago
+              </p>
+
+              <!-- Status Badge -->
+              <span class="inline-block mt-2 px-2 py-1 text-xs rounded font-medium <%= creative.generated? ? 'bg-green-100 text-green-800' : creative.failed? ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= creative.status.titleize %>
+              </span>
+
+              <!-- Ad Copy Preview -->
+              <% if creative.ad_copy.present? %>
+                <p class="mt-2 text-xs text-gray-600 line-clamp-2">
+                  <%= creative.ad_copy.lines.first&.strip %>
+                </p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Back Link -->
+  <div class="mt-8">
+    <%= link_to @campaign, class: "text-gray-600 hover:text-gray-900 text-sm font-medium" do %>
+      <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Campaign
+    <% end %>
+  </div>
+</div>
