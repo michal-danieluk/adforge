@@ -1,9 +1,10 @@
 class BrandsController < ApplicationController
+  before_action :require_authentication
   before_action :set_brand, only: %i[ show edit update destroy ]
 
   # GET /brands or /brands.json
   def index
-    @brands = Brand.includes(:brand_colors).all
+    @brands = Current.user.brands.includes(:brand_colors)
   end
 
   # GET /brands/1 or /brands/1.json
@@ -13,7 +14,7 @@ class BrandsController < ApplicationController
 
   # GET /brands/new
   def new
-    @brand = Brand.new
+    @brand = Current.user.brands.build
     # Build one default color for the form with primary set to true
     @brand.brand_colors.build(primary: true)
   end
@@ -24,7 +25,7 @@ class BrandsController < ApplicationController
 
   # POST /brands or /brands.json
   def create
-    @brand = Brand.new(brand_params)
+    @brand = Current.user.brands.build(brand_params)
 
     # Debug logging
     Rails.logger.info "="*60
@@ -77,7 +78,7 @@ class BrandsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_brand
-      @brand = Brand.find(params.expect(:id))
+      @brand = Current.user.brands.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.

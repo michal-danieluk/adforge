@@ -1,9 +1,10 @@
 class CampaignsController < ApplicationController
+  before_action :require_authentication
   before_action :set_campaign, only: %i[ show edit update destroy ]
 
   # GET /campaigns or /campaigns.json
   def index
-    @campaigns = Campaign.includes(:brand).order(created_at: :desc)
+    @campaigns = Current.user.campaigns.includes(:brand).order(created_at: :desc)
   end
 
   # GET /campaigns/1 or /campaigns/1.json
@@ -14,15 +15,28 @@ class CampaignsController < ApplicationController
   def new
     @campaign = Campaign.new
     @campaign.brand_id = params[:brand_id] if params[:brand_id]
+    @brands = Current.user.brands.order(:name)
   end
 
   # GET /campaigns/1/edit
   def edit
+    @brands = Current.user.brands.order(:name)
   end
 
   # POST /campaigns or /campaigns.json
   def create
     @campaign = Campaign.new(campaign_params)
+    @brands = Current.user.brands.order(:name)
+
+    # Validate that the selected brand belongs to current user
+    if @campaign.brand_id && !Current.user.brands.exists?(@campaign.brand_id)
+      @campaign.errors.add(:brand, "is invalid")
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @campaign.errors, status: :unprocessable_entity }
+      end
+      return
+    end
 
     respond_to do |format|
       if @campaign.save
@@ -61,7 +75,7 @@ class CampaignsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_campaign
-      @campaign = Campaign.find(params.expect(:id))
+      @campaign = Current.user.campaigns.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
