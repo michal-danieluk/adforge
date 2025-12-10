@@ -5,25 +5,66 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center mb-6">
     <h1 class="font-bold text-4xl">Campaigns</h1>
-    <%= link_to "New campaign", new_campaign_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+    <%= link_to "New Campaign", new_campaign_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
   </div>
 
-  <div id="campaigns" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @campaigns.any? %>
-      <% @campaigns.each do |campaign| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render campaign %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", campaign, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_campaign_path(campaign), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", campaign, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No campaigns found.</p>
-    <% end %>
-  </div>
+  <% if @campaigns.any? %>
+    <div class="overflow-x-auto bg-white shadow-sm rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Brand
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Product
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Target Audience
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Created
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @campaigns.each do |campaign| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded flex-shrink-0" style="background-color: <%= campaign.brand_primary_color %>"></div>
+                  <%= link_to campaign.brand.name, campaign.brand, class: "text-blue-600 hover:underline" %>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <%= link_to campaign.product_name, campaign, class: "text-blue-600 hover:underline font-medium" %>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-gray-900 max-w-xs truncate">
+                  <%= truncate(campaign.target_audience, length: 50) %>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= time_ago_in_words(campaign.created_at) %> ago
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <%= link_to "Edit", edit_campaign_path(campaign), class: "text-blue-600 hover:underline mr-3" %>
+                <%= button_to "Delete", campaign, method: :delete, class: "text-red-600 hover:underline inline", form: { class: "inline", data: { turbo_confirm: "Are you sure?" } } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-12 bg-gray-50 rounded-lg">
+      <p class="text-gray-600 mb-4">No campaigns yet. Create your first campaign to get started!</p>
+      <%= link_to "Create Campaign", new_campaign_path, class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium" %>
+    </div>
+  <% end %>
 </div>
