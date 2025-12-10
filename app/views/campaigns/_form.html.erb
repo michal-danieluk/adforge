@@ -12,23 +12,33 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :brand_id %>
-    <%= form.text_field :brand_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:brand_id].none?, "border-red-400 focus:outline-red-600": campaign.errors[:brand_id].any?}] %>
+    <%= form.label :brand_id, "Brand" %>
+    <%= form.collection_select :brand_id, Brand.order(:name), :id, :name,
+        { prompt: "Select a brand" },
+        { class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:brand_id].none?, "border-red-400 focus:outline-red-600": campaign.errors[:brand_id].any?}] } %>
   </div>
 
   <div class="my-5">
     <%= form.label :product_name %>
-    <%= form.text_field :product_name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:product_name].none?, "border-red-400 focus:outline-red-600": campaign.errors[:product_name].any?}] %>
+    <%= form.text_field :product_name,
+        placeholder: "e.g., Organic Coffee Beans",
+        class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:product_name].none?, "border-red-400 focus:outline-red-600": campaign.errors[:product_name].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :target_audience %>
-    <%= form.text_field :target_audience, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:target_audience].none?, "border-red-400 focus:outline-red-600": campaign.errors[:target_audience].any?}] %>
+    <%= form.text_field :target_audience,
+        placeholder: "e.g., Health-conscious millennials",
+        class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:target_audience].none?, "border-red-400 focus:outline-red-600": campaign.errors[:target_audience].any?}] %>
   </div>
 
   <div class="my-5">
     <%= form.label :description %>
-    <%= form.textarea :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:description].none?, "border-red-400 focus:outline-red-600": campaign.errors[:description].any?}] %>
+    <%= form.text_area :description,
+        rows: 4,
+        placeholder: "Any specific messaging, promotions...",
+        class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": campaign.errors[:description].none?, "border-red-400 focus:outline-red-600": campaign.errors[:description].any?}] %>
+    <p class="text-sm text-gray-600 mt-1">Maximum 500 characters</p>
   </div>
 
   <div class="inline">
