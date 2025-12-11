@@ -41,36 +41,38 @@ module Campaigns
 
     def build_prompt
       <<~PROMPT
-        You are an expert advertising copywriter for the brand "#{@brand.name}".
-        The brand's tone of voice is "#{@brand.tone_of_voice}".
+        Jesteś ekspertem copywritingu reklamowego dla marki "#{@brand.name}".
+        Ton komunikacji marki (tone of voice) to: "#{@brand.tone_of_voice}".
 
-        Generate exactly 3 distinct ad concepts for a social media campaign.
-        Each concept must include a "headline", "body", and "background_prompt".
-        The "background_prompt" should be a concise, descriptive phrase suitable for an AI image generator (e.g., DALL-E).
+        Wygeneruj dokładnie 3 różne koncepcje reklamowe dla kampanii w mediach społecznościowych.
+        Każda koncepcja musi zawierać "headline" (nagłówek), "body" (treść reklamy) oraz "background_prompt" (opis tła dla generatora obrazów).
+        
+        WAŻNE: Wszystkie teksty reklamowe (headline, body) muszą być w języku POLSKIM.
+        "background_prompt" powinien być w języku ANGIELSKIM, ponieważ jest przeznaczony dla modelu DALL-E/Imagen.
 
-        Campaign Details:
-        Product: #{@campaign.product_name}
-        Target Audience: #{@campaign.target_audience}
-        Description: #{@campaign.description}
+        Szczegóły kampanii:
+        Produkt: #{@campaign.product_name}
+        Grupa docelowa: #{@campaign.target_audience}
+        Opis: #{@campaign.description}
 
-        Ensure the output is a JSON object with a single key "concepts", which is an array of 3 ad concepts.
+        Upewnij się, że wyjście jest obiektem JSON z jednym kluczem "concepts", który jest tablicą 3 koncepcji reklamowych.
 
-        Example JSON Structure:
+        Przykładowa struktura JSON:
         {
           "concepts": [
             {
-              "headline": "Catchy Headline 1",
-              "body": "Compelling body text for concept 1.",
+              "headline": "Chwytliwy nagłówek 1",
+              "body": "Przekonująca treść reklamy dla koncepcji 1.",
               "background_prompt": "A vibrant image of [something related to product]."
             },
             {
-              "headline": "Catchy Headline 2",
-              "body": "Compelling body text for concept 2.",
+              "headline": "Chwytliwy nagłówek 2",
+              "body": "Przekonująca treść reklamy dla koncepcji 2.",
               "background_prompt": "An artistic representation of [another aspect]."
             },
             {
-              "headline": "Catchy Headline 3",
-              "body": "Compelling body text for concept 3.",
+              "headline": "Chwytliwy nagłówek 3",
+              "body": "Przekonująca treść reklamy dla koncepcji 3.",
               "background_prompt": "A minimalist design featuring [key product element]."
             }
           ]
