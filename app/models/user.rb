@@ -5,5 +5,7 @@ class User < ApplicationRecord
   has_many :campaigns, through: :brands
   has_many :creatives, through: :campaigns
 
+  enum :role, { user: 0, admin: 1 }
+
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 end

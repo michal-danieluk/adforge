@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   resource :session
   resource :registration, only: [:new, :create]
-  resource :settings, only: [:show, :update]
+  
+  namespace :admin do
+    resource :settings, only: [:show, :update]
+    get 'dashboard', to: 'dashboard#index'
+  end
+
   resources :passwords, param: :token
 
   # Campaigns with nested Creatives

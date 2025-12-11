@@ -2,7 +2,7 @@
   <div class="bg-white rounded-lg shadow p-6">
     <h1 class="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
 
-    <%= form_with model: @app_config, url: settings_path, method: :patch, class: "space-y-6" do |f| %>
+    <%= form_with model: @app_config, url: admin_settings_path, method: :patch, class: "space-y-6" do |f| %>
       <% if @app_config.errors.any? %>
         <div class="bg-red-50 text-red-500 p-4 rounded mb-4">
           <ul>
