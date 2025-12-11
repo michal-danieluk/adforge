@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   # Campaigns with nested Creatives
   resources :campaigns do
+    member do
+      post :generate
+    end
     resources :creatives, only: [:index, :show, :create, :destroy]
   end
 

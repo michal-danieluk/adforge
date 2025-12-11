@@ -8,7 +8,7 @@
   </div>
 
   <!-- Status Banner -->
-  <% if @creative.pending? || @creative.generating? %>
+  <% if @creative.pending? %>
     <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 rounded">
       <div class="flex items-center">
         <svg class="animate-spin h-5 w-5 text-yellow-600 mr-3" fill="none" viewBox="0 0 24 24">
@@ -64,8 +64,38 @@
       <div>
         <h2 class="text-xl font-bold text-gray-900 mb-4">Ad Copy</h2>
         <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-          <p class="text-gray-700 whitespace-pre-line leading-relaxed"><%= @creative.ad_copy %></p>
+          <% if @creative.headline.present? %>
+            <h3 class="text-2xl font-bold text-gray-900 mb-4"><%= @creative.headline %></h3>
+          <% end %>
+          <p class="text-gray-700 whitespace-pre-line leading-relaxed"><%= @creative.body %></p>
         </div>
+
+        <!-- AI Metadata -->
+        <% if @creative.ai_model.present? %>
+          <div class="mt-6 bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <h3 class="text-sm font-semibold text-blue-900 mb-3">AI Generation Info</h3>
+            <dl class="space-y-2 text-sm">
+              <div class="flex">
+                <dt class="text-blue-700 w-32 flex-shrink-0">Model:</dt>
+                <dd class="text-blue-900 font-medium"><%= @creative.ai_model %></dd>
+              </div>
+              <div class="flex">
+                <dt class="text-blue-700 w-32 flex-shrink-0">Tokens:</dt>
+                <dd class="text-blue-900"><%= number_with_delimiter(@creative.ai_tokens) %></dd>
+              </div>
+              <div class="flex">
+                <dt class="text-blue-700 w-32 flex-shrink-0">Cost:</dt>
+                <dd class="text-blue-900">$<%= sprintf("%.4f", @creative.ai_cost_dollars) %></dd>
+              </div>
+              <% if @creative.background_prompt.present? %>
+                <div class="flex pt-2 border-t border-blue-200">
+                  <dt class="text-blue-700 w-32 flex-shrink-0">Background Prompt:</dt>
+                  <dd class="text-blue-600 text-xs"><%= @creative.background_prompt %></dd>
+                </div>
+              <% end %>
+            </dl>
+          </div>
+        <% end %>
 
         <!-- Campaign Context -->
         <div class="mt-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
@@ -98,8 +128,8 @@
 
         <!-- Generate Another -->
         <div class="mt-6">
-          <%= button_to "↻ Generate Another Ad",
-                        campaign_creatives_path(@campaign),
+          <%= button_to "↻ Generate 3 More Ads",
+                        generate_campaign_path(@campaign),
                         method: :post,
                         class: "w-full bg-white text-gray-700 border border-gray-300 px-4 py-2.5 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors" %>
         </div>

@@ -1,10 +1,18 @@
 <% content_for :title, @campaign.product_name %>
 
-<div class="md:w-2/3 w-full">
+<!-- Enable Turbo Streams for real-time updates -->
+<%= turbo_stream_from @campaign %>
+
+<div class="max-w-6xl mx-auto">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
+  <% if alert.present? %>
+    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-md inline-block" id="alert"><%= alert %></p>
+  <% end %>
+
+  <!-- Campaign Details -->
   <%= render @campaign %>
 
   <div class="mt-8 flex flex-wrap gap-2">
@@ -13,63 +21,33 @@
     <%= button_to "Delete Campaign", @campaign, method: :delete, form_class: "inline-block", class: "rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure you want to delete this campaign?" } %>
   </div>
 
-  <!-- Generate Ad Section -->
+  <!-- Phase A: Generation Status & Creatives -->
   <div class="mt-12 pt-8 border-t border-gray-200">
-    <div class="flex justify-between items-center mb-6">
-      <div>
-        <h2 class="font-bold text-2xl text-gray-900">Generated Ads</h2>
-        <p class="text-sm text-gray-600 mt-1">AI-powered ads for this campaign</p>
-      </div>
-      <div class="flex gap-3">
-        <%= button_to "+ Generate New Ad",
-                      campaign_creatives_path(@campaign),
-                      method: :post,
-                      class: "rounded-md px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2" %>
-
-        <% if @campaign.creatives.any? %>
-          <%= link_to "View All (#{@campaign.creatives.count})",
-                      campaign_creatives_path(@campaign),
-                      class: "rounded-md px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium text-sm transition-colors" %>
-        <% end %>
-      </div>
+    <div class="mb-6">
+      <h2 class="font-bold text-2xl text-gray-900">AI-Generated Ad Concepts</h2>
+      <p class="text-sm text-gray-600 mt-1">Phase A: Text generation (headlines, body copy, image prompts)</p>
     </div>
 
-    <% if @recent_creatives.any? %>
-      <div class="grid md:grid-cols-3 gap-4">
-        <% @recent_creatives.each do |creative| %>
-          <%= link_to campaign_creative_path(@campaign, creative), class: "block" do %>
-            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all">
-              <% if creative.final_image.attached? %>
-                <%= image_tag creative.final_image.variant(resize_to_limit: [300, 300]),
-                              class: "w-full aspect-square object-cover" %>
-              <% end %>
-              <div class="p-3">
-                <p class="text-xs text-gray-500">
-                  <%= time_ago_in_words(creative.created_at) %> ago
-                </p>
-                <% if creative.ad_copy.present? %>
-                  <p class="mt-1 text-xs text-gray-600 line-clamp-2">
-                    <%= creative.ad_copy.lines.first&.strip %>
-                  </p>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center py-12 px-4 bg-gray-50 rounded-lg border border-gray-200">
-        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <h3 class="mt-4 text-lg font-semibold text-gray-900">No ads yet for this campaign</h3>
-        <p class="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
-          Click "Generate New Ad" to create your first AI-powered ad for this campaign.
-        </p>
-        <%= button_to "⚡ Create First Ad",
+    <!-- Status Section (Turbo Stream Target) -->
+    <%= render partial: "campaigns/status", locals: { campaign: @campaign } %>
+
+    <!-- Creatives Grid (Turbo Stream Target) -->
+    <% if @campaign.creatives.any? %>
+      <div class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">
+            Generated Concepts (<%= @campaign.creatives.count %>)
+          </h3>
+          <%= link_to "View All Details →",
                       campaign_creatives_path(@campaign),
-                      method: :post,
-                      class: "mt-6 inline-block rounded-md px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2" %>
+                      class: "text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors" %>
+        </div>
+
+        <div id="campaign_<%= @campaign.id %>_creatives" class="grid md:grid-cols-3 gap-6">
+          <% @campaign.creatives.recent.each do |creative| %>
+            <%= render partial: "creatives/card", locals: { creative: creative } %>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_10_225209) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_11_200912) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -62,16 +62,24 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_10_225209) do
     t.datetime "created_at", null: false
     t.text "description"
     t.string "product_name"
+    t.integer "status", default: 0, null: false
     t.string "target_audience"
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_campaigns_on_brand_id"
+    t.index ["status"], name: "index_campaigns_on_status"
   end
 
   create_table "creatives", force: :cascade do |t|
-    t.text "ad_copy"
+    t.integer "ai_cost_cents"
+    t.json "ai_metadata", default: {}
+    t.string "ai_model"
+    t.integer "ai_tokens"
+    t.text "background_prompt"
+    t.text "body"
     t.integer "campaign_id", null: false
     t.datetime "created_at", null: false
-    t.string "status", default: "pending", null: false
+    t.string "headline"
+    t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["campaign_id"], name: "index_creatives_on_campaign_id"
     t.index ["status"], name: "index_creatives_on_status"

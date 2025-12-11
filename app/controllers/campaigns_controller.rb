@@ -1,6 +1,6 @@
 class CampaignsController < ApplicationController
   before_action :require_authentication
-  before_action :set_campaign, only: %i[ show edit update destroy ]
+  before_action :set_campaign, only: %i[ show edit update destroy generate ]
 
   # GET /campaigns or /campaigns.json
   def index
@@ -9,7 +9,7 @@ class CampaignsController < ApplicationController
 
   # GET /campaigns/1 or /campaigns/1.json
   def show
-    @recent_creatives = @campaign.creatives.successful.recent.limit(3)
+    @recent_creatives = @campaign.creatives.generated.recent.limit(3)
   end
 
   # GET /campaigns/new
@@ -70,6 +70,23 @@ class CampaignsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to campaigns_path, notice: "Campaign was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
+    end
+  end
+
+  # POST /campaigns/1/generate
+  def generate
+    # Only allow generation if campaign is in draft or failed state
+    unless @campaign.draft? || @campaign.failed?
+      redirect_to @campaign, alert: "Campaign is already processing or completed." and return
+    end
+
+    # Trigger async generation job
+    GenerateCampaignJob.perform_later(@campaign.id)
+
+    respond_to do |format|
+      format.html { redirect_to @campaign, notice: "Generating 3 ad concepts with AI... This may take up to 60 seconds." }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("campaign_#{@campaign.id}_status", partial: "campaigns/status", locals: { campaign: @campaign }) }
+      format.json { head :accepted }
     end
   end
 

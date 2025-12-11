@@ -3,58 +3,43 @@ require "open-uri"
 class CreativeGeneratorJob < ApplicationJob
   queue_as :default
 
+  retry_on StandardError, wait: 5.seconds, attempts: 3
+  discard_on ActiveRecord::RecordNotFound
+
   def perform(creative_id)
     creative = Creative.find(creative_id)
     creative.update!(status: "generating")
 
-    # PLACEHOLDER: Generate fake background
+    # Generate placeholder background image
+    # In the future, this will call DALL-E with creative.image_prompt
     background_url = generate_placeholder_background(creative)
 
     # Download and attach
     creative.raw_background.attach(
       io: URI.open(background_url),
-      filename: "bg_#{creative.id}.png"
+      filename: "bg_#{creative.id}.png",
+      content_type: "image/png"
     )
 
-    # PLACEHOLDER: Generate fake ad copy
-    ad_copy = generate_placeholder_copy(creative)
-
-    # Update creative
-    creative.update!(
-      ad_copy: ad_copy,
-      status: "generated"
-    )
+    # Mark as generated
+    creative.update!(status: "generated")
 
     # Trigger image composition job
     ImageComposerJob.perform_later(creative.id)
   rescue => e
     creative&.update!(status: "failed")
-    Rails.logger.error("Creative generation failed: #{e.message}")
+    Rails.logger.error("Creative generation failed for creative #{creative_id}: #{e.message}")
     raise
   end
 
   private
 
   def generate_placeholder_background(creative)
-    brand = creative.campaign.brand
-    color = brand.primary_color.delete("#")
+    # Use reliable placehold.co service with headline text
+    # Encode headline for URL
+    text = URI.encode_www_form_component(creative.headline || "Ad Creative")
 
-    # Use placehold.co with brand color
-    "https://placehold.co/1080x1080/#{color}/white/png?text=AI+Background"
-  end
-
-  def generate_placeholder_copy(creative)
-    campaign = creative.campaign
-    brand = campaign.brand
-
-    # Fake copy based on campaign data
-    <<~COPY.strip
-      Discover #{campaign.product_name}
-
-      Perfect for #{campaign.target_audience}.
-      #{brand.tone_of_voice&.capitalize || 'Premium'} quality you can trust.
-
-      Learn more today!
-    COPY
+    # Use neutral colors for reliability
+    "https://placehold.co/1080x1080/EEEEEE/333333/png?text=#{text}"
   end
 end
