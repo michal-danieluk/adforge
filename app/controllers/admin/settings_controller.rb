@@ -20,7 +20,7 @@ module Admin
     private
 
     def settings_params
-      params.require(:app_config).permit(:gemini_api_key)
+      params.require(:app_config).permit(:gemini_api_key, :ai_model)
     end
   end
 end

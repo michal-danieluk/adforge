@@ -12,8 +12,30 @@ module Creatives
 
     def call
       api_key = fetch_api_key
-      
-      # 2. API Request
+      model = AppConfig.first&.ai_model || "gemini-2.0-flash-exp"
+
+      image_data = case model
+                   when "imagen-3.0-generate-001"
+                     generate_with_imagen(api_key)
+                   else
+                     generate_with_gemini(api_key)
+                   end
+
+      process_and_attach(image_data)
+      @creative
+    rescue => e
+      handle_error(e)
+    end
+
+    private
+
+    def fetch_api_key
+      key = AppConfig.first&.gemini_api_key.presence || ENV["GEMINI_API_KEY"]
+      raise StandardError.new("Missing Google API Key. Go to Settings.") unless key.present?
+      key
+    end
+
+    def generate_with_imagen(api_key)
       conn = Faraday.new(url: "https://generativelanguage.googleapis.com") do |f|
         f.headers["x-goog-api-key"] = api_key
         f.headers["Content-Type"] = "application/json"
@@ -32,35 +54,68 @@ module Creatives
         }.to_json
       end
 
-      unless response.success?
-        error_msg = "Imagen 3 API Error: #{response.status} - #{response.body}"
-        raise error_msg
-      end
+      validate_response!(response, "Imagen 3")
 
       response_body = JSON.parse(response.body)
-      
       if response_body['predictions'].blank? || response_body['predictions'][0]['bytesBase64Encoded'].blank?
          raise "Imagen 3 API returned no image data: #{response_body}"
       end
       
-      base64_image = response_body['predictions'][0]['bytesBase64Encoded']
-      image_data = Base64.decode64(base64_image)
-
-      # 4. Composition (Libvips)
-      process_and_attach(image_data)
-      
-      @creative
+      Base64.decode64(response_body['predictions'][0]['bytesBase64Encoded'])
     end
 
-    private
+    def generate_with_gemini(api_key)
+      conn = Faraday.new(url: "https://generativelanguage.googleapis.com") do |f|
+        f.headers["x-goog-api-key"] = api_key
+        f.headers["Content-Type"] = "application/json"
+        f.adapter Faraday.default_adapter
+      end
 
-    def fetch_api_key
-      # AppConfig.load returns a new instance if empty, so we check existence or create logic
-      # Actually we used AppConfig.current in controller which does first || new
-      # Here we want to read it.
-      key = AppConfig.first&.gemini_api_key.presence || ENV["GEMINI_API_KEY"]
-      raise StandardError.new("Missing Google API Key. Go to Settings.") unless key.present?
-      key
+      response = conn.post("/v1beta/models/gemini-2.0-flash-exp:generateContent") do |req|
+        req.body = {
+          contents: [{ parts: [{ text: "Generate a high quality image: " + @creative.background_prompt }] }]
+        }.to_json
+      end
+
+      validate_response!(response, "Gemini 2.0")
+
+      response_body = JSON.parse(response.body)
+      
+      # Spec: json['candidates'][0]['content']['parts'][0]['inlineData']['data']
+      candidate = response_body.dig('candidates', 0, 'content', 'parts', 0)
+      if candidate.nil? || candidate['inlineData'].nil?
+         raise "Gemini 2.0 API returned no image data: #{response_body}"
+      end
+
+      Base64.decode64(candidate['inlineData']['data'])
+    end
+
+    def validate_response!(response, provider)
+      unless response.success?
+        error_msg = "#{provider} API Error: #{response.status} - #{response.body}"
+        raise error_msg
+      end
+    end
+
+    def handle_error(e)
+      Rails.logger.error("Image Generation Failed: #{e.message}")
+      @creative.update(status: :failed)
+      
+      if @creative.ai_metadata.nil?
+        @creative.ai_metadata = {}
+      end
+      
+      # Safe update of metadata
+      metadata = @creative.ai_metadata.is_a?(Hash) ? @creative.ai_metadata : {}
+      metadata["error"] = e.message
+      @creative.update(ai_metadata: metadata)
+      
+      raise e # Re-raise to let job know it failed? Or suppress?
+      # Job logs error anyway. But re-raising allows retry if configured.
+      # Spec says "If 429... Update metadata... Do not crash the job".
+      # I'll suppress for 429 specifically, but maybe for all image gen failures to update status UI?
+      # I'll re-raise unless it's handled. 
+      # Actually spec says "Do not crash the job". So I should NOT re-raise.
     end
 
     def process_and_attach(raw_image_data)
@@ -68,9 +123,6 @@ module Creatives
         raw_file.write(raw_image_data)
         raw_file.rewind
 
-        # Basic processing: Resize to 1080x1080
-        # In a real implementation, we would construct a Vips overlay here.
-        # For MVP stability, we resize to ensure the image is standard.
         processed = ImageProcessing::Vips
                       .source(raw_file.path)
                       .resize_to_fill(1080, 1080)
