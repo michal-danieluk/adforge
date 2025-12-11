@@ -92,11 +92,23 @@ module Campaigns
 
     def create_creatives(concepts, response)
       creatives = []
-      token_usage = response.usage || {}
+      
+      # Safe extraction of token usage and model
+      token_usage = {}
+      if response.respond_to?(:usage)
+        token_usage = response.usage
+      elsif response.respond_to?(:raw_response) && response.raw_response.is_a?(Hash)
+        token_usage = response.raw_response["usage"] || {}
+      end
+      
+      # Ensure token_usage is a hash
+      token_usage = token_usage.to_h if token_usage.respond_to?(:to_h)
+
       prompt_tokens = token_usage["prompt_tokens"] || 0
       completion_tokens = token_usage["completion_tokens"] || 0
       total_tokens = token_usage["total_tokens"] || 0
-      model_name = response.model || "gpt-4o-mini" # Fallback if model not in response
+      
+      model_name = response.respond_to?(:model) ? response.model : "gpt-4o-mini"
 
       # For a simple gpt-4o-mini, the pricing is usually $0.00015 / 1K tokens for input and $0.0006 / 1K tokens for output.
       # This can vary. For now, a placeholder or a very basic calculation.
