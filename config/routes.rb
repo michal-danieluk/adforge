@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resource :session
   resource :registration, only: [:new, :create]
+  resource :settings, only: [:show, :update]
   resources :passwords, param: :token
 
   # Campaigns with nested Creatives
@@ -8,7 +9,11 @@ Rails.application.routes.draw do
     member do
       post :generate
     end
-    resources :creatives, only: [:index, :show, :create, :destroy]
+    resources :creatives, only: [:index, :show, :create, :destroy] do
+      member do
+        post :render_image
+      end
+    end
   end
 
   # Direct route for downloading creatives
