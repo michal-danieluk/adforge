@@ -24,7 +24,7 @@
   <% elsif @creative.failed? %>
     <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
       <p class="text-red-700 font-medium">Generation failed. Please try again.</p>
-      <%= button_to "↻ Try Again", campaign_creatives_path(@campaign), method: :post, class: "mt-2 inline-block rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
+      <%= button_to "↻ Try Again", campaign_creatives_path(@campaign), method: :post, class: "mt-2 inline-block rounded-md px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2" %>
     </div>
   <% end %>
 
@@ -50,7 +50,7 @@
         <div class="mt-4 flex gap-3">
           <%= link_to "↓ Download Image",
                       download_creative_path(@creative),
-                      class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm flex-1 text-center transition-colors" %>
+                      class: "bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 ring-2 ring-indigo-500 ring-offset-2 font-semibold text-sm flex-1 text-center transition-colors" %>
 
           <%= button_to "✕ Delete",
                         campaign_creative_path(@campaign, @creative),

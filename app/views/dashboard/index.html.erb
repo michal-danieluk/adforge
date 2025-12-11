@@ -10,13 +10,13 @@
   <!-- Stats Overview -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
     <!-- Brands Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-200 transition-all">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-indigo-200 transition-all">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-gray-600">Total Brands</p>
           <p class="mt-2 text-3xl font-bold text-gray-900"><%= @brands_count %></p>
         </div>
-        <div class="p-3 bg-blue-100 rounded-lg">
+        <div class="p-3 bg-indigo-100 rounded-lg">
           <!-- Heroicon: swatch -->
           <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Campaigns Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-200 transition-all">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-indigo-200 transition-all">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-gray-600">Total Campaigns</p>
@@ -74,7 +74,7 @@
       <% if @recent_brands.any? %>
         <div class="space-y-3">
           <% @recent_brands.each do |brand| %>
-            <%= link_to brand, class: "block p-4 border border-gray-200 rounded-lg hover:border-blue-200 hover:bg-gray-50 transition-all" do %>
+            <%= link_to brand, class: "block p-4 border border-gray-200 rounded-lg hover:border-indigo-200 hover:bg-gray-50 transition-all" do %>
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background-color: <%= brand.primary_color %>"></div>
                 <div class="flex-1 min-w-0">
@@ -103,7 +103,7 @@
       <% if @recent_campaigns.any? %>
         <div class="space-y-3">
           <% @recent_campaigns.each do |campaign| %>
-            <%= link_to campaign, class: "block p-4 border border-gray-200 rounded-lg hover:border-blue-200 hover:bg-gray-50 transition-all" do %>
+            <%= link_to campaign, class: "block p-4 border border-gray-200 rounded-lg hover:border-indigo-200 hover:bg-gray-50 transition-all" do %>
               <div class="flex items-start gap-3">
                 <div class="w-8 h-8 rounded flex-shrink-0" style="background-color: <%= campaign.brand_primary_color %>"></div>
                 <div class="flex-1 min-w-0">
