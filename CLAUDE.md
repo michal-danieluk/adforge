@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Technology Stack
 
-- **Framework:** Rails 8.0.2+ with Ruby 3.4.1
+- **Framework:** Rails 8.1.1 with Ruby 3.4.1
 - **Database:** SQLite3 (production-ready, uses Solid Cache and Solid Queue)
 - **Frontend:** Hotwire (Turbo + Stimulus) with Tailwind CSS via Propshaft
 - **AI/ML:** `langchainrb` for provider abstraction, `ruby-openai` for LLM access
