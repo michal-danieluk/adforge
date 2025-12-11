@@ -15,7 +15,7 @@ module Campaigns
       raise "LLM client not configured" unless llm
 
       response = llm.chat(
-        prompt: prompt_text,
+        messages: [{ role: "user", content: prompt_text }],
         model: "gpt-4o-mini", # As specified in MVP_BRAIN_SPEC.md
         temperature: 0.7,
         response_format: { type: "json_object" } # Request JSON output
