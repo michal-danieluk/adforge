@@ -11,7 +11,10 @@ module Campaigns
       prompt_text = build_prompt
 
       # 2. Call the LLM
-      response = Langchain.llm.chat(
+      llm = Rails.application.config.langchain_llm
+      raise "LLM client not configured" unless llm
+
+      response = llm.chat(
         prompt: prompt_text,
         model: "gpt-4o-mini", # As specified in MVP_BRAIN_SPEC.md
         temperature: 0.7,
