@@ -22,7 +22,7 @@ module Campaigns
       )
 
       # 3. Parse and validate JSON response
-      parsed_response = JSON.parse(response.completion.to_json) # Need to convert Langchain::LLM::ChatCompletionResponse to JSON string
+      parsed_response = JSON.parse(response.completion)
       concepts = parsed_response["concepts"] # Assuming the LLM returns a key called 'concepts'
 
       validate_concepts!(concepts)
