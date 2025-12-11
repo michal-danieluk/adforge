@@ -11,15 +11,10 @@
       </p>
     </div>
 
-    <%= button_to "Generate New Ad",
+    <%= button_to "+ Generate New Ad",
                   campaign_creatives_path(@campaign),
                   method: :post,
-                  class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm transition-colors inline-flex items-center" do %>
-      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      Generate New Ad
-    <% end %>
+                  class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm transition-colors" %>
   </div>
 
   <!-- Grid of Creatives -->
@@ -36,15 +31,10 @@
         Click "Generate New Ad" to create your first AI-powered social media ad.
         It takes about 30 seconds.
       </p>
-      <%= button_to "Generate First Ad",
+      <%= button_to "⚡ Generate First Ad",
                     campaign_creatives_path(@campaign),
                     method: :post,
-                    class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" do %>
-        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-        Generate First Ad
-      <% end %>
+                    class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
       <p class="mt-4 text-xs text-gray-400">
         AI-powered ads that match your brand perfectly
       </p>

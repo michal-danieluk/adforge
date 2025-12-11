@@ -21,15 +21,10 @@
         <p class="text-sm text-gray-600 mt-1">AI-powered ads for this campaign</p>
       </div>
       <div class="flex gap-3">
-        <%= button_to "Generate New Ad",
+        <%= button_to "+ Generate New Ad",
                       campaign_creatives_path(@campaign),
                       method: :post,
-                      class: "rounded-md px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2 inline-flex items-center" do %>
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Generate New Ad
-        <% end %>
+                      class: "rounded-md px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
 
         <% if @campaign.creatives.any? %>
           <%= link_to "View All (#{@campaign.creatives.count})",
@@ -71,15 +66,10 @@
         <p class="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
           Click "Generate New Ad" to create your first AI-powered ad for this campaign.
         </p>
-        <%= button_to "Create First Ad",
+        <%= button_to "⚡ Create First Ad",
                       campaign_creatives_path(@campaign),
                       method: :post,
-                      class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" do %>
-          <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Create First Ad
-        <% end %>
+                      class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
       </div>
     <% end %>
   </div>

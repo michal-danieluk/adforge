@@ -24,7 +24,7 @@
   <% elsif @creative.failed? %>
     <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
       <p class="text-red-700 font-medium">Generation failed. Please try again.</p>
-      <%= button_to "Try Again", campaign_creatives_path(@campaign), method: :post, class: "mt-2 inline-block rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
+      <%= button_to "↻ Try Again", campaign_creatives_path(@campaign), method: :post, class: "mt-2 inline-block rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
     </div>
   <% end %>
 
@@ -48,23 +48,15 @@
 
         <!-- Actions -->
         <div class="mt-4 flex gap-3">
-          <%= link_to download_creative_path(@creative),
-                      class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm flex-1 text-center transition-colors" do %>
-            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download Image
-          <% end %>
+          <%= link_to "↓ Download Image",
+                      download_creative_path(@creative),
+                      class: "bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 ring-2 ring-blue-500 ring-offset-2 font-semibold text-sm flex-1 text-center transition-colors" %>
 
-          <%= button_to campaign_creative_path(@campaign, @creative),
+          <%= button_to "✕ Delete",
+                        campaign_creative_path(@campaign, @creative),
                         method: :delete,
                         data: { turbo_confirm: "Are you sure you want to delete this creative?" },
-                        class: "bg-red-600 text-white px-4 py-3 rounded-md hover:bg-red-700 font-medium text-sm transition-colors" do %>
-            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            Delete
-          <% end %>
+                        class: "bg-red-600 text-white px-4 py-3 rounded-md hover:bg-red-700 font-medium text-sm transition-colors" %>
         </div>
       </div>
 
@@ -106,15 +98,10 @@
 
         <!-- Generate Another -->
         <div class="mt-6">
-          <%= button_to "Generate Another Ad",
+          <%= button_to "↻ Generate Another Ad",
                         campaign_creatives_path(@campaign),
                         method: :post,
-                        class: "w-full bg-white text-gray-700 border border-gray-300 px-4 py-2.5 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors" do %>
-            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Generate Another
-          <% end %>
+                        class: "w-full bg-white text-gray-700 border border-gray-300 px-4 py-2.5 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors" %>
         </div>
       </div>
     </div>
