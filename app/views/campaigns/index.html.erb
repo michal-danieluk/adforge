@@ -1,82 +1,65 @@
 <% content_for :title, "Campaigns" %>
 
 <div class="w-full">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="font-bold text-4xl">Campaigns</h1>
-    <%= link_to "New Campaign", new_campaign_path, class: "rounded-md px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-zinc-900">Campaigns</h1>
+      <p class="mt-1 text-sm text-zinc-500">Manage your ad campaigns</p>
+    </div>
+    <%= link_to "+ New Campaign", new_campaign_path, class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
   </div>
 
   <% if @campaigns.any? %>
-    <div class="overflow-x-auto bg-white shadow-sm rounded-lg">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Brand
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Product
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Target Audience
-            </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Created
-            </th>
-            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @campaigns.each do |campaign| %>
-            <tr class="hover:bg-gray-50 transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 rounded flex-shrink-0" style="background-color: <%= campaign.brand_primary_color %>"></div>
-                  <%= link_to campaign.brand.name, campaign.brand, class: "text-blue-600 hover:underline" %>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <%= link_to campaign.product_name, campaign, class: "text-blue-600 hover:underline font-medium" %>
-              </td>
-              <td class="px-6 py-4">
-                <div class="text-gray-900 max-w-xs truncate">
-                  <%= truncate(campaign.target_audience, length: 50) %>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <%= time_ago_in_words(campaign.created_at) %> ago
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "Edit", edit_campaign_path(campaign), class: "text-gray-600 hover:text-gray-900 mr-3" %>
-                <%= button_to "Delete", campaign, method: :delete, class: "text-red-600 hover:text-red-900 inline font-medium", form: { class: "inline", data: { turbo_confirm: "Are you sure you want to delete this campaign?" } } %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+    <!-- Grid of Campaign Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @campaigns.each do |campaign| %>
+        <%= link_to campaign, class: "block" do %>
+          <div class="bg-white border border-zinc-200 rounded-xl overflow-hidden hover:border-indigo-300 transition-colors cursor-pointer">
+            <!-- Colored top bar (brand color) -->
+            <div class="h-1" style="background-color: <%= campaign.brand_primary_color %>;"></div>
+
+            <!-- Card content -->
+            <div class="p-6">
+              <!-- Campaign name -->
+              <h3 class="text-lg font-semibold text-zinc-900 mb-2"><%= campaign.product_name %></h3>
+
+              <!-- Target audience -->
+              <p class="text-sm text-zinc-500 mb-4 line-clamp-2">
+                <%= campaign.target_audience %>
+              </p>
+
+              <!-- Brand badge -->
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-4 h-4 rounded" style="background-color: <%= campaign.brand_primary_color %>;"></div>
+                <span class="text-xs text-zinc-500"><%= campaign.brand.name %></span>
+              </div>
+
+              <!-- Meta info -->
+              <div class="flex items-center justify-between text-xs text-zinc-400 pt-3 border-t border-zinc-100">
+                <span><%= time_ago_in_words(campaign.created_at) %> ago</span>
+                <span><%= pluralize(campaign.creatives.count, 'ad') %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   <% else %>
-    <div class="text-center py-16 px-4 bg-white shadow-sm rounded-lg">
-      <!-- Heroicon: megaphone (outline) -->
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Empty State -->
+    <div class="border-2 border-dashed border-zinc-300 rounded-lg p-12 text-center">
+      <!-- Heroicon: megaphone -->
+      <svg class="mx-auto h-12 w-12 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
       </svg>
 
-      <h3 class="mt-4 text-lg font-semibold text-gray-900">
-        Launch your first campaign
+      <h3 class="mt-4 text-lg font-semibold text-zinc-900">
+        No campaigns yet
       </h3>
-      <p class="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
-        Pick a brand, describe your product and target audience, and let AI generate
-        professional social media ads in minutes.
+      <p class="mt-2 text-sm text-zinc-500 max-w-sm mx-auto">
+        Create your first campaign and start generating AI-powered ads for your brand.
       </p>
 
-      <%= link_to "Create First Campaign", new_campaign_path, class: "mt-6 inline-block rounded-md px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors ring-2 ring-blue-500 ring-offset-2" %>
-
-      <p class="mt-4 text-xs text-gray-400">
-        Generate on-brand ads instantly
-      </p>
+      <%= link_to "+ Create First Campaign", new_campaign_path, class: "mt-6 inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
     </div>
   <% end %>
 </div>
