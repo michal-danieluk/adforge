@@ -1,7 +1,7 @@
 class CreativesController < ApplicationController
   before_action :require_authentication
   before_action :set_campaign, only: [:index, :create]
-  before_action :set_creative, only: [:show, :destroy, :download]
+  before_action :set_creative, only: [:show, :destroy, :download, :render_image]
 
   def index
     @creatives = @campaign.creatives.recent
@@ -10,6 +10,11 @@ class CreativesController < ApplicationController
   def show
     @campaign = @creative.campaign
     # View displays single creative with image and ad copy
+  end
+
+  def render_image
+    RenderCreativeJob.perform_later(@creative.id)
+    redirect_to campaign_path(@creative.campaign), notice: "Generating image in background..."
   end
 
   def create

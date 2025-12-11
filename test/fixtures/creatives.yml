@@ -2,10 +2,12 @@
 
 one:
   campaign: one
-  ad_copy: MyText
-  status: MyString
+  headline: "Headline One"
+  body: "Body text for creative one."
+  status: :pending
 
 two:
   campaign: two
-  ad_copy: MyText
-  status: MyString
+  headline: "Headline Two"
+  body: "Body text for creative two."
+  status: :pending

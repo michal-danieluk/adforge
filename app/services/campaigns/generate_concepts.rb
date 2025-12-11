@@ -1,208 +1,129 @@
+# app/services/campaigns/generate_concepts.rb
 module Campaigns
   class GenerateConcepts
-    # Cost per 1k tokens for gpt-4o-mini (approximate)
-    # Input: $0.00015/1k, Output: $0.0006/1k tokens
-    # Using blended rate for simplicity
-    COST_PER_1K_TOKENS = 0.0006
-
-    attr_reader :campaign, :llm
-
     def initialize(campaign)
       @campaign = campaign
-      @llm = Rails.application.config.langchain_llm
+      @brand = campaign.brand
     end
 
-    # Main entry point - returns array of created Creatives
     def call
-      response = generate_from_llm
-      concepts = parse_and_validate_json(response)
-      create_creatives(concepts, response)
+      # 1. Construct the prompt
+      prompt_text = build_prompt
+
+      # 2. Call the LLM
+      response = Langchain.llm.chat(
+        prompt: prompt_text,
+        model: "gpt-4o-mini", # As specified in MVP_BRAIN_SPEC.md
+        temperature: 0.7,
+        response_format: { type: "json_object" } # Request JSON output
+      )
+
+      # 3. Parse and validate JSON response
+      parsed_response = JSON.parse(response.completion.to_json) # Need to convert Langchain::LLM::ChatCompletionResponse to JSON string
+      concepts = parsed_response["concepts"] # Assuming the LLM returns a key called 'concepts'
+
+      validate_concepts!(concepts)
+
+      # 4. Create Creative records
+      creatives = create_creatives(concepts, response)
+
+      creatives
+    rescue JSON::ParserError => e
+      raise "LLM response was not valid JSON: #{e.message}"
     rescue => e
-      Rails.logger.error("Failed to generate concepts for campaign #{campaign.id}: #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
-      raise
+      raise "Error generating concepts: #{e.message}"
     end
 
     private
 
-    def generate_from_llm
-      prompt = build_prompt
+    def build_prompt
+      <<~PROMPT
+        You are an expert advertising copywriter for the brand "#{@brand.name}".
+        The brand's tone of voice is "#{@brand.tone_of_voice}".
 
-      llm.chat(
-        messages: [
-          { role: "system", content: system_message },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.7,
-        response_format: { type: "json_object" }
-      )
-    end
+        Generate exactly 3 distinct ad concepts for a social media campaign.
+        Each concept must include a "headline", "body", and "background_prompt".
+        The "background_prompt" should be a concise, descriptive phrase suitable for an AI image generator (e.g., DALL-E).
 
-    def system_message
-      <<~SYSTEM.strip
-        Jesteś ekspertem w tworzeniu tekstów reklamowych, specjalizującym się w reklamach w mediach społecznościowych.
-        Twórz kreatywne koncepcje reklam na podstawie tożsamości marki i wymagań kampanii.
+        Campaign Details:
+        Product: #{@campaign.product_name}
+        Target Audience: #{@campaign.target_audience}
+        Description: #{@campaign.description}
 
-        KRYTYCZNE: Musisz odpowiedzieć WYŁĄCZNIE poprawnym JSON-em w tym DOKŁADNYM formacie:
+        Ensure the output is a JSON object with a single key "concepts", which is an array of 3 ad concepts.
+
+        Example JSON Structure:
         {
           "concepts": [
             {
-              "headline": "Krótki, chwytliwy nagłówek (maks. 8 słów)",
-              "body": "Przekonujący tekst główny reklamy (2-3 zdania, maks. 100 słów)",
-              "background_prompt": "Szczegółowy prompt dla DALL-E 3 do wygenerowania tła (opisz styl wizualny, kolory, nastrój, kompozycję, oświetlenie) - PROMPT W JĘZYKU ANGIELSKIM"
+              "headline": "Catchy Headline 1",
+              "body": "Compelling body text for concept 1.",
+              "background_prompt": "A vibrant image of [something related to product]."
+            },
+            {
+              "headline": "Catchy Headline 2",
+              "body": "Compelling body text for concept 2.",
+              "background_prompt": "An artistic representation of [another aspect]."
+            },
+            {
+              "headline": "Catchy Headline 3",
+              "body": "Compelling body text for concept 3.",
+              "background_prompt": "A minimalist design featuring [key product element]."
             }
           ]
         }
-
-        Wymagania:
-        - Wygeneruj dokładnie 3 unikalne koncepcje
-        - Każda koncepcja musi mieć inny kreatywny kierunek
-        - Nagłówki powinny przyciągać uwagę i być zwięzłe
-        - Tekst główny powinien zawierać wyraźne wezwanie do działania
-        - Prompty do obrazów powinny być szczegółowe i konkretne (w języku angielskim dla DALL-E)
-
-        JĘZYK:
-        - headline i body: PO POLSKU
-        - background_prompt: PO ANGIELSKU (dla DALL-E 3)
-      SYSTEM
-    end
-
-    def build_prompt
-      brand = campaign.brand
-      colors = brand.brand_colors.map(&:hex_value).join(", ")
-
-      # Map Polish tone names to Polish descriptions
-      tone_map = {
-        "professional" => "profesjonalny",
-        "casual" => "swobodny",
-        "friendly" => "przyjazny",
-        "authoritative" => "autorytatywny"
-      }
-      tone_pl = tone_map[brand.tone_of_voice] || brand.tone_of_voice
-
-      <<~PROMPT.strip
-        Stwórz 3 różne koncepcje reklam dla mediów społecznościowych:
-
-        TOŻSAMOŚĆ MARKI:
-        - Nazwa: #{brand.name}
-        - Ton komunikacji: #{tone_pl}
-        - Kolory marki: #{colors}
-
-        KAMPANIA:
-        - Produkt/Temat: #{campaign.product_name}
-        - Grupa docelowa: #{campaign.target_audience}
-        #{campaign.description.present? ? "- Dodatkowy kontekst: #{campaign.description}" : ""}
-
-        WYMAGANIA DLA KAŻDEJ KONCEPCJI:
-        1. Nagłówek (headline): Stwórz unikalny przekaz skierowany bezpośrednio do grupy: #{campaign.target_audience}
-        2. Tekst główny (body): Dopasuj ton #{tone_pl} i dodaj wyraźne wezwanie do działania (CTA)
-        3. Prompt do obrazu (background_prompt): Zaproponuj wizualizację, która:
-           - Uzupełnia kolory marki (#{colors})
-           - Tworzy zainteresowanie wizualne i emocjonalny wpływ
-           - Jest odpowiednia dla profesjonalnej reklamy w social media
-           - Może być wygenerowana przez DALL-E 3
-           - NAPISZ PROMPT PO ANGIELSKU (dla DALL-E API)
-
-        Każda z 3 koncepcji powinna być wyraźnie różna w podejściu i komunikacie.
-
-        PAMIĘTAJ: headline i body po polsku, background_prompt po angielsku!
       PROMPT
     end
 
-    def parse_and_validate_json(response)
-      # Extract content from OpenAI response via langchainrb
-      # Try different ways to get the content depending on langchainrb version
-      content = nil
-
-      # Method 1: Try response.completion (simple text)
-      if response.respond_to?(:completion)
-        content = response.completion
+    def validate_concepts!(concepts)
+      unless concepts.is_a?(Array) && concepts.size == 3
+        raise "Expected JSON to contain an array of exactly 3 concepts, but received: #{concepts.inspect}"
       end
 
-      # Method 2: Try response.chat_completion (full API response)
-      if content.nil? && response.respond_to?(:chat_completion)
-        completion = response.chat_completion
-
-        # If it's a string, parse it first
-        completion = JSON.parse(completion) if completion.is_a?(String)
-
-        # Extract content from the nested structure
-        content = completion.dig("choices", 0, "message", "content") if completion.is_a?(Hash)
-      end
-
-      unless content.present?
-        raise "No content in API response. Response methods: #{response.methods.grep(/complet/)}"
-      end
-
-      # Parse the JSON content (the actual concepts)
-      parsed = JSON.parse(content)
-      concepts = parsed["concepts"]
-
-      # Validate structure
-      unless concepts.is_a?(Array) && concepts.length == 3
-        raise "Expected 3 concepts, got #{concepts&.length || 0}"
-      end
-
-      # Validate each concept has required fields
-      concepts.each_with_index do |concept, i|
-        %w[headline body background_prompt].each do |field|
-          unless concept[field].present?
-            raise "Concept #{i + 1} missing required field: #{field}"
-          end
+      concepts.each do |concept|
+        unless concept.is_a?(Hash) && concept["headline"].present? && concept["body"].present? && concept["background_prompt"].present?
+          raise "Each concept must be a hash with 'headline', 'body', and 'background_prompt' keys: #{concept.inspect}"
         end
       end
-
-      concepts
-    rescue JSON::ParserError => e
-      Rails.logger.error("Failed to parse JSON response: #{content}")
-      raise "Invalid JSON from AI: #{e.message}"
     end
 
     def create_creatives(concepts, response)
-      # Extract token usage and calculate cost
-      # Parse chat_completion the same way as in parse_and_validate_json
-      completion = response.chat_completion
-      completion = JSON.parse(completion) if completion.is_a?(String)
+      creatives = []
+      token_usage = response.usage || {}
+      prompt_tokens = token_usage["prompt_tokens"] || 0
+      completion_tokens = token_usage["completion_tokens"] || 0
+      total_tokens = token_usage["total_tokens"] || 0
+      model_name = response.model || "gpt-4o-mini" # Fallback if model not in response
 
-      usage = completion.dig("usage") if completion.is_a?(Hash)
-      total_tokens = usage&.dig("total_tokens") || 0
-      model = completion.dig("model") || "gpt-4o-mini" if completion.is_a?(Hash)
-      model ||= "gpt-4o-mini"
-      cost_cents = calculate_cost_cents(total_tokens)
+      # For a simple gpt-4o-mini, the pricing is usually $0.00015 / 1K tokens for input and $0.0006 / 1K tokens for output.
+      # This can vary. For now, a placeholder or a very basic calculation.
+      # A more robust solution would query the actual pricing or use a gem that handles this.
+      # For MVP, we'll make a simplified assumption or get exact pricing if available from Langchain.
+      # Let's assume a rough total cost for now, or fetch from a more accurate source if Langchain provides it.
+      
+      # Placeholder for cost calculation (actual values depend on OpenAI pricing and Langchain integration)
+      # Assuming 15 cents per 1M prompt tokens, 60 cents per 1M completion tokens for gpt-4o-mini
+      # Convert to cents for storage
+      cost_cents_prompt = (prompt_tokens.to_f / 1_000_000) * 15 # in cents per million
+      cost_cents_completion = (completion_tokens.to_f / 1_000_000) * 60 # in cents per million
+      total_cost_cents = (cost_cents_prompt + cost_cents_completion).round # round to nearest cent
 
-      # Build metadata
-      metadata = {
-        model: model,
-        total_tokens: total_tokens,
-        cost_cents: cost_cents,
-        prompt_tokens: usage&.dig("prompt_tokens"),
-        completion_tokens: usage&.dig("completion_tokens"),
-        generated_at: Time.current.iso8601
-      }
-
-      # Create all 3 creatives in a transaction
-      ActiveRecord::Base.transaction do
-        concepts.map do |concept|
-          campaign.creatives.create!(
-            headline: concept["headline"],
-            body: concept["body"],
-            background_prompt: concept["background_prompt"],
-            status: :generated,  # Phase A: text is ready, no image generation yet
-            ai_metadata: metadata.merge(
-              tokens_share: total_tokens / 3 # Divide evenly across concepts
-            ),
-            # Also populate legacy columns for backward compatibility
-            ai_model: model,
-            ai_tokens: total_tokens / 3,
-            ai_cost_cents: cost_cents / 3
-          )
-        end
+      concepts.each do |concept|
+        creatives << @campaign.creatives.create!(
+          headline: concept["headline"],
+          body: concept["body"],
+          background_prompt: concept["background_prompt"],
+          ai_metadata: {
+            model: model_name,
+            prompt_tokens: prompt_tokens,
+            completion_tokens: completion_tokens,
+            total_tokens: total_tokens,
+            cost_cents: total_cost_cents / concepts.size # Distribute total cost among creatives
+          },
+          status: :pending # Initial status for creatives
+        )
       end
-    end
-
-    def calculate_cost_cents(tokens)
-      # (tokens / 1000) * cost_per_1k * 100 (to convert to cents)
-      ((tokens / 1000.0) * COST_PER_1K_TOKENS * 100).round
+      creatives
     end
   end
 end

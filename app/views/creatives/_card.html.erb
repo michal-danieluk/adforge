@@ -1,13 +1,19 @@
 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:border-indigo-200 transition-all" id="creative_<%= creative.id %>">
-  <!-- Placeholder for future image (Phase B) -->
-  <div class="bg-gradient-to-br from-gray-100 to-gray-200 aspect-square flex items-center justify-center">
-    <div class="text-center p-6">
-      <svg class="mx-auto h-16 w-16 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      <p class="text-xs text-gray-500 font-medium">Image Coming in Phase B</p>
+  <!-- Image Section (Phase B) -->
+  <% if creative.final_image.attached? %>
+    <%= image_tag creative.final_image, class: "w-full aspect-square object-cover" %>
+  <% else %>
+    <!-- Placeholder -->
+    <div class="bg-gradient-to-br from-gray-100 to-gray-200 aspect-square flex items-center justify-center">
+      <div class="text-center p-6">
+        <svg class="mx-auto h-16 w-16 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-xs text-gray-500 font-medium mb-3">Image Pending</p>
+        <%= button_to "🎨 Render (Imagen)", render_image_campaign_creative_path(creative.campaign, creative), method: :post, class: "bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-2 rounded shadow transition-colors" %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <!-- Creative Content -->
   <div class="p-4">
