@@ -8,7 +8,9 @@ class CreativeGeneratorJob < ApplicationJob
 
   def perform(creative_id)
     creative = Creative.find(creative_id)
-    creative.update!(status: "generating")
+
+    # Note: Status remains 'pending' during generation
+    # Only update to 'generated' on success or 'failed' on error
 
     # Generate placeholder background image
     # In the future, this will call DALL-E with creative.image_prompt
