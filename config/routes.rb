@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     resources :creatives, only: [:index, :show, :create, :destroy] do
       member do
         post :render_image
+        post :rewrite
       end
     end
   end
@@ -29,8 +30,8 @@ Rails.application.routes.draw do
   # Dashboard
   get "dashboard", to: "dashboard#index", as: :dashboard
 
-  # Define root path
-  root "dashboard#index"
+  # Landing page for logged out users, dashboard for logged in users
+  root "pages#home"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

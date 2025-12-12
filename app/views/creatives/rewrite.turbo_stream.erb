@@ -1,0 +1,8 @@
+<%= turbo_stream.replace "creative_#{@creative.id}_headline" do %>
+  <div id="creative_<%= @creative.id %>_headline" class="mb-3">
+    <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+      <%= @creative.headline %>
+    </h3>
+    <%= button_to "✨ Rewrite", rewrite_campaign_creative_path(@creative.campaign, @creative), method: :post, class: "text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors inline-flex items-center" %>
+  </div>
+<% end %>
