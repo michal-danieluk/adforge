@@ -1,10 +1,10 @@
-<% content_for :title, "Dashboard - AdForge" %>
+<% content_for :title, "Pulpit - AdForge" %>
 
 <div class="w-full max-w-7xl">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-4xl font-bold text-zinc-900">Dashboard</h1>
-    <p class="mt-2 text-zinc-600">Welcome back, <%= Current.user.email_address.split('@').first.capitalize %></p>
+    <h1 class="text-4xl font-bold text-zinc-900">Pulpit</h1>
+    <p class="mt-2 text-zinc-600">Witaj ponownie, <%= Current.user.email_address.split('@').first.capitalize %></p>
   </div>
 
   <!-- Stats Overview -->
@@ -13,7 +13,7 @@
     <div class="bg-white rounded-lg border border-zinc-200 p-6 hover:border-zinc-300 transition-all">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-zinc-600">Total Brands</p>
+          <p class="text-sm font-medium text-zinc-600">Łącznie Marek</p>
           <p class="mt-2 text-3xl font-bold text-zinc-900"><%= @brands_count %></p>
         </div>
         <div class="p-3 bg-indigo-50 rounded-lg">
@@ -23,14 +23,14 @@
           </svg>
         </div>
       </div>
-      <%= link_to "View all brands →", brands_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
+      <%= link_to "Zobacz wszystkie marki →", brands_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
     </div>
 
     <!-- Campaigns Card -->
     <div class="bg-white rounded-lg border border-zinc-200 p-6 hover:border-zinc-300 transition-all">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-zinc-600">Total Campaigns</p>
+          <p class="text-sm font-medium text-zinc-600">Łącznie Kampanii</p>
           <p class="mt-2 text-3xl font-bold text-zinc-900"><%= @campaigns_count %></p>
         </div>
         <div class="p-3 bg-orange-50 rounded-lg">
@@ -40,25 +40,25 @@
           </svg>
         </div>
       </div>
-      <%= link_to "View all campaigns →", campaigns_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
+      <%= link_to "Zobacz wszystkie kampanie →", campaigns_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
     </div>
   </div>
 
   <!-- Quick Actions -->
   <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-6 mb-8">
-    <h2 class="text-xl font-bold text-zinc-900 mb-4">Quick Actions</h2>
+    <h2 class="text-xl font-bold text-zinc-900 mb-4">Szybkie Akcje</h2>
     <div class="flex flex-wrap gap-3">
       <%= link_to new_brand_path, class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md font-medium text-sm hover:bg-indigo-700 transition-colors" do %>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        New Brand
+        Nowa Marka
       <% end %>
       <%= link_to new_campaign_path, class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md font-medium text-sm hover:bg-indigo-700 transition-colors" do %>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        New Campaign
+        Nowa Kampania
       <% end %>
     </div>
   </div>
@@ -67,8 +67,8 @@
     <!-- Recent Brands -->
     <div class="bg-white rounded-lg border border-zinc-200 p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-zinc-900">Recent Brands</h2>
-        <%= link_to "View all", brands_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
+        <h2 class="text-lg font-bold text-zinc-900">Ostatnie Marki</h2>
+        <%= link_to "Zobacz wszystkie", brands_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
       </div>
 
       <% if @recent_brands.any? %>
@@ -87,8 +87,8 @@
         </div>
       <% else %>
         <div class="text-center py-8">
-          <p class="text-zinc-500 text-sm mb-3">No brands yet</p>
-          <%= link_to "Create your first brand", new_brand_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
+          <p class="text-zinc-500 text-sm mb-3">Brak marek</p>
+          <%= link_to "Stwórz swoją pierwszą markę", new_brand_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
         </div>
       <% end %>
     </div>
@@ -96,8 +96,8 @@
     <!-- Recent Campaigns -->
     <div class="bg-white rounded-lg border border-zinc-200 p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-zinc-900">Recent Campaigns</h2>
-        <%= link_to "View all", campaigns_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
+        <h2 class="text-lg font-bold text-zinc-900">Ostatnie Kampanie</h2>
+        <%= link_to "Zobacz wszystkie", campaigns_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
       </div>
 
       <% if @recent_campaigns.any? %>
@@ -109,7 +109,7 @@
                 <div class="flex-1 min-w-0">
                   <p class="font-medium text-zinc-900 truncate"><%= campaign.product_name %></p>
                   <p class="text-sm text-zinc-500 truncate"><%= campaign.target_audience %></p>
-                  <p class="text-xs text-zinc-400 mt-1"><%= time_ago_in_words(campaign.created_at) %> ago</p>
+                  <p class="text-xs text-zinc-400 mt-1"><%= time_ago_in_words(campaign.created_at) %> temu</p>
                 </div>
               </div>
             <% end %>
@@ -117,8 +117,8 @@
         </div>
       <% else %>
         <div class="text-center py-8">
-          <p class="text-zinc-500 text-sm mb-3">No campaigns yet</p>
-          <%= link_to "Create your first campaign", new_campaign_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
+          <p class="text-zinc-500 text-sm mb-3">Brak kampanii</p>
+          <%= link_to "Stwórz swoją pierwszą kampanię", new_campaign_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
         </div>
       <% end %>
     </div>

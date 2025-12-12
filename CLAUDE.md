@@ -22,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - NO React/Vue/SPA frameworks (Hotwire only)
 - NO feature flags, admin panels (ActiveAdmin/RailsAdmin), or drag-and-drop editors in MVP
 - NO custom CSS files (Tailwind utilities only)
+- **ALL UI text and communication MUST be in Polish** - landing page, dashboard, forms, buttons, flash messages, etc.
 
 ## Development Commands
 

@@ -9,7 +9,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   test "should get dashboard" do
     get dashboard_url
     assert_response :success
-    assert_select "h1", "Dashboard"
+    assert_select "h1", "Pulpit"
   end
 
   test "should show brands count" do

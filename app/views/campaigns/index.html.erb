@@ -1,12 +1,12 @@
-<% content_for :title, "Campaigns" %>
+<% content_for :title, "Kampanie" %>
 
 <div class="w-full">
   <div class="flex justify-between items-center mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-zinc-900">Campaigns</h1>
-      <p class="mt-1 text-sm text-zinc-500">Manage your ad campaigns</p>
+      <h1 class="text-3xl font-bold text-zinc-900">Kampanie</h1>
+      <p class="mt-1 text-sm text-zinc-500">Zarządzaj swoimi kampaniami reklamowymi</p>
     </div>
-    <%= link_to "+ New Campaign", new_campaign_path, class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
+    <%= link_to "+ Nowa Kampania", new_campaign_path, class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
   </div>
 
   <% if @campaigns.any? %>
@@ -36,8 +36,8 @@
 
               <!-- Meta info -->
               <div class="flex items-center justify-between text-xs text-zinc-400 pt-3 border-t border-zinc-100">
-                <span><%= time_ago_in_words(campaign.created_at) %> ago</span>
-                <span><%= pluralize(campaign.creatives.count, 'ad') %></span>
+                <span><%= time_ago_in_words(campaign.created_at) %> temu</span>
+                <span><%= campaign.creatives.count %> <%= campaign.creatives.count == 1 ? 'ogłoszenie' : campaign.creatives.count < 5 ? 'ogłoszenia' : 'ogłoszeń' %></span>
               </div>
             </div>
           </div>
@@ -53,13 +53,13 @@
       </svg>
 
       <h3 class="mt-4 text-lg font-semibold text-zinc-900">
-        No campaigns yet
+        Brak kampanii
       </h3>
       <p class="mt-2 text-sm text-zinc-500 max-w-sm mx-auto">
-        Create your first campaign and start generating AI-powered ads for your brand.
+        Stwórz swoją pierwszą kampanię i zacznij generować ogłoszenia oparte na AI dla swojej marki.
       </p>
 
-      <%= link_to "+ Create First Campaign", new_campaign_path, class: "mt-6 inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
+      <%= link_to "+ Stwórz pierwszą kampanię", new_campaign_path, class: "mt-6 inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
     </div>
   <% end %>
 </div>
