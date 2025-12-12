@@ -22,38 +22,45 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-zinc-50">
+  <body class="bg-white">
     <% if Current.user %>
       <!-- Sidebar -->
-      <aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-zinc-200 flex flex-col">
+      <aside class="fixed left-0 top-0 h-full w-64 bg-zinc-50 border-r border-zinc-200 flex flex-col">
         <!-- Logo -->
         <div class="p-6 border-b border-zinc-200">
           <%= link_to root_path do %>
-            <h1 class="text-xl font-bold tracking-tighter text-zinc-900">AdForge</h1>
+            <h1 class="text-xl font-bold tracking-tight text-zinc-900">AdForge</h1>
           <% end %>
         </div>
 
         <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-1">
-          <%= link_to dashboard_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(root_path) || current_page?(dashboard_path) ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'}" do %>
+          <%= link_to dashboard_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(root_path) || current_page?(dashboard_path) ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'}" do %>
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             Dashboard
           <% end %>
 
-          <%= link_to brands_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(brands_path) ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'}" do %>
+          <%= link_to campaigns_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(campaigns_path) ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'}" do %>
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            Campaigns
+          <% end %>
+
+          <%= link_to brands_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(brands_path) ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100'}" do %>
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
             Brands
           <% end %>
 
-          <%= link_to campaigns_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors #{current_page?(campaigns_path) ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'}" do %>
+          <%= link_to "#", class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100" do %>
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Campaigns
+            History
           <% end %>
         </nav>
 

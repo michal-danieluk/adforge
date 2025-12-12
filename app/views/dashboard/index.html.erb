@@ -3,58 +3,58 @@
 <div class="w-full max-w-7xl">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-900">Dashboard</h1>
-    <p class="mt-2 text-gray-600">Welcome back, <%= Current.user.email_address.split('@').first.capitalize %></p>
+    <h1 class="text-4xl font-bold text-zinc-900">Dashboard</h1>
+    <p class="mt-2 text-zinc-600">Welcome back, <%= Current.user.email_address.split('@').first.capitalize %></p>
   </div>
 
   <!-- Stats Overview -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
     <!-- Brands Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-indigo-200 transition-all">
+    <div class="bg-white rounded-lg border border-zinc-200 p-6 hover:border-zinc-300 transition-all">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600">Total Brands</p>
-          <p class="mt-2 text-3xl font-bold text-gray-900"><%= @brands_count %></p>
+          <p class="text-sm font-medium text-zinc-600">Total Brands</p>
+          <p class="mt-2 text-3xl font-bold text-zinc-900"><%= @brands_count %></p>
         </div>
-        <div class="p-3 bg-indigo-100 rounded-lg">
+        <div class="p-3 bg-indigo-50 rounded-lg">
           <!-- Heroicon: swatch -->
-          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
           </svg>
         </div>
       </div>
-      <%= link_to "View all brands →", brands_path, class: "mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium inline-block" %>
+      <%= link_to "View all brands →", brands_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
     </div>
 
     <!-- Campaigns Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-indigo-200 transition-all">
+    <div class="bg-white rounded-lg border border-zinc-200 p-6 hover:border-zinc-300 transition-all">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-600">Total Campaigns</p>
-          <p class="mt-2 text-3xl font-bold text-gray-900"><%= @campaigns_count %></p>
+          <p class="text-sm font-medium text-zinc-600">Total Campaigns</p>
+          <p class="mt-2 text-3xl font-bold text-zinc-900"><%= @campaigns_count %></p>
         </div>
-        <div class="p-3 bg-green-100 rounded-lg">
+        <div class="p-3 bg-orange-50 rounded-lg">
           <!-- Heroicon: megaphone -->
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
           </svg>
         </div>
       </div>
-      <%= link_to "View all campaigns →", campaigns_path, class: "mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium inline-block" %>
+      <%= link_to "View all campaigns →", campaigns_path, class: "mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium inline-block" %>
     </div>
   </div>
 
   <!-- Quick Actions -->
-  <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow-lg p-6 mb-8 text-white">
-    <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+  <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-6 mb-8">
+    <h2 class="text-xl font-bold text-zinc-900 mb-4">Quick Actions</h2>
     <div class="flex flex-wrap gap-3">
-      <%= link_to new_brand_path, class: "inline-flex items-center px-4 py-2 bg-white text-blue-600 rounded-md font-semibold text-sm hover:bg-gray-100 transition-colors" do %>
+      <%= link_to new_brand_path, class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md font-medium text-sm hover:bg-indigo-700 transition-colors" do %>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
         New Brand
       <% end %>
-      <%= link_to new_campaign_path, class: "inline-flex items-center px-4 py-2 bg-white text-blue-600 rounded-md font-semibold text-sm hover:bg-gray-100 transition-colors" do %>
+      <%= link_to new_campaign_path, class: "inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md font-medium text-sm hover:bg-indigo-700 transition-colors" do %>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
@@ -65,21 +65,21 @@
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Recent Brands -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="bg-white rounded-lg border border-zinc-200 p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-900">Recent Brands</h2>
-        <%= link_to "View all", brands_path, class: "text-sm text-blue-600 hover:text-blue-700 font-medium" %>
+        <h2 class="text-lg font-bold text-zinc-900">Recent Brands</h2>
+        <%= link_to "View all", brands_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
       </div>
 
       <% if @recent_brands.any? %>
         <div class="space-y-3">
           <% @recent_brands.each do |brand| %>
-            <%= link_to brand, class: "block p-4 border border-gray-200 rounded-lg hover:border-indigo-200 hover:bg-gray-50 transition-all" do %>
+            <%= link_to brand, class: "block p-4 border border-zinc-200 rounded-lg hover:border-zinc-300 hover:bg-zinc-50 transition-all" do %>
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background-color: <%= brand.primary_color %>"></div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-gray-900 truncate"><%= brand.name %></p>
-                  <p class="text-sm text-gray-500 capitalize"><%= brand.tone_of_voice %></p>
+                  <p class="font-medium text-zinc-900 truncate"><%= brand.name %></p>
+                  <p class="text-sm text-zinc-500 capitalize"><%= brand.tone_of_voice %></p>
                 </div>
               </div>
             <% end %>
@@ -87,29 +87,29 @@
         </div>
       <% else %>
         <div class="text-center py-8">
-          <p class="text-gray-500 text-sm mb-3">No brands yet</p>
-          <%= link_to "Create your first brand", new_brand_path, class: "text-blue-600 hover:text-blue-700 font-medium text-sm" %>
+          <p class="text-zinc-500 text-sm mb-3">No brands yet</p>
+          <%= link_to "Create your first brand", new_brand_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
         </div>
       <% end %>
     </div>
 
     <!-- Recent Campaigns -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div class="bg-white rounded-lg border border-zinc-200 p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-900">Recent Campaigns</h2>
-        <%= link_to "View all", campaigns_path, class: "text-sm text-blue-600 hover:text-blue-700 font-medium" %>
+        <h2 class="text-lg font-bold text-zinc-900">Recent Campaigns</h2>
+        <%= link_to "View all", campaigns_path, class: "text-sm text-indigo-600 hover:text-indigo-700 font-medium" %>
       </div>
 
       <% if @recent_campaigns.any? %>
         <div class="space-y-3">
           <% @recent_campaigns.each do |campaign| %>
-            <%= link_to campaign, class: "block p-4 border border-gray-200 rounded-lg hover:border-indigo-200 hover:bg-gray-50 transition-all" do %>
+            <%= link_to campaign, class: "block p-4 border border-zinc-200 rounded-lg hover:border-zinc-300 hover:bg-zinc-50 transition-all" do %>
               <div class="flex items-start gap-3">
                 <div class="w-8 h-8 rounded flex-shrink-0" style="background-color: <%= campaign.brand_primary_color %>"></div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-gray-900 truncate"><%= campaign.product_name %></p>
-                  <p class="text-sm text-gray-500 truncate"><%= campaign.target_audience %></p>
-                  <p class="text-xs text-gray-400 mt-1"><%= time_ago_in_words(campaign.created_at) %> ago</p>
+                  <p class="font-medium text-zinc-900 truncate"><%= campaign.product_name %></p>
+                  <p class="text-sm text-zinc-500 truncate"><%= campaign.target_audience %></p>
+                  <p class="text-xs text-zinc-400 mt-1"><%= time_ago_in_words(campaign.created_at) %> ago</p>
                 </div>
               </div>
             <% end %>
@@ -117,8 +117,8 @@
         </div>
       <% else %>
         <div class="text-center py-8">
-          <p class="text-gray-500 text-sm mb-3">No campaigns yet</p>
-          <%= link_to "Create your first campaign", new_campaign_path, class: "text-blue-600 hover:text-blue-700 font-medium text-sm" %>
+          <p class="text-zinc-500 text-sm mb-3">No campaigns yet</p>
+          <%= link_to "Create your first campaign", new_campaign_path, class: "text-indigo-600 hover:text-indigo-700 font-medium text-sm" %>
         </div>
       <% end %>
     </div>
