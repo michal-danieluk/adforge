@@ -4,26 +4,26 @@
     <div>
       <h1 class="font-bold text-4xl"><%= campaign.product_name %></h1>
       <p class="text-gray-600 mt-1">
-        <%= link_to campaign.brand.name, campaign.brand, class: "text-blue-600 hover:underline" %>
+        <%= link_to campaign.brand.name, campaign.brand, class: "text-indigo-600 hover:underline" %>
       </p>
     </div>
   </div>
 
   <div class="space-y-4">
     <div>
-      <strong class="block font-medium mb-1 text-gray-700">Target Audience:</strong>
+      <strong class="block font-medium mb-1 text-gray-700">Grupa docelowa:</strong>
       <p class="text-gray-900"><%= campaign.target_audience %></p>
     </div>
 
     <% if campaign.description.present? %>
       <div>
-        <strong class="block font-medium mb-1 text-gray-700">Description:</strong>
+        <strong class="block font-medium mb-1 text-gray-700">Opis:</strong>
         <div class="text-gray-900"><%= simple_format(campaign.description) %></div>
       </div>
     <% end %>
 
     <div class="text-sm text-gray-500">
-      Created <%= time_ago_in_words(campaign.created_at) %> ago
+      Utworzono <%= time_ago_in_words(campaign.created_at) %> temu
     </div>
   </div>
 </div>

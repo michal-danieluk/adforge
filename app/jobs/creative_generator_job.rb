@@ -1,5 +1,3 @@
-require "open-uri"
-
 class CreativeGeneratorJob < ApplicationJob
   queue_as :default
 
@@ -8,26 +6,14 @@ class CreativeGeneratorJob < ApplicationJob
 
   def perform(creative_id)
     creative = Creative.find(creative_id)
+    campaign = creative.campaign
+    brand = campaign.brand
 
-    # Note: Status remains 'pending' during generation
-    # Only update to 'generated' on success or 'failed' on error
+    # Step 1: Generate ad copy using LLM
+    generate_ad_copy(creative, campaign, brand)
 
-    # Generate placeholder background image
-    # In the future, this will call DALL-E with creative.image_prompt
-    background_url = generate_placeholder_background(creative)
-
-    # Download and attach
-    creative.raw_background.attach(
-      io: URI.open(background_url),
-      filename: "bg_#{creative.id}.png",
-      content_type: "image/png"
-    )
-
-    # Mark as generated
-    creative.update!(status: "generated")
-
-    # Trigger image composition job
-    ImageComposerJob.perform_later(creative.id)
+    # Step 2: Generate image
+    RenderCreativeJob.perform_later(creative.id)
   rescue => e
     creative&.update!(status: "failed")
     Rails.logger.error("Creative generation failed for creative #{creative_id}: #{e.message}")
@@ -36,12 +22,59 @@ class CreativeGeneratorJob < ApplicationJob
 
   private
 
-  def generate_placeholder_background(creative)
-    # Use reliable placehold.co service with headline text
-    # Encode headline for URL
-    text = URI.encode_www_form_component(creative.headline || "Ad Creative")
+  def generate_ad_copy(creative, campaign, brand)
+    llm = Rails.application.config.langchain_llm
+    raise "LLM client not configured" unless llm
 
-    # Use neutral colors for reliability
-    "https://placehold.co/1080x1080/EEEEEE/333333/png?text=#{text}"
+    prompt = build_prompt(campaign, brand)
+
+    response = llm.chat(
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-4o-mini",
+      temperature: 0.8,
+      response_format: { type: "json_object" }
+    )
+
+    parsed = JSON.parse(response.completion)
+
+    creative.update!(
+      headline: parsed["headline"],
+      body: parsed["body"],
+      background_prompt: parsed["background_prompt"],
+      ai_metadata: {
+        model: "gpt-4o-mini",
+        prompt_tokens: response.prompt_tokens || 0,
+        completion_tokens: response.completion_tokens || 0,
+        total_tokens: response.total_tokens || 0
+      }
+    )
+  end
+
+  def build_prompt(campaign, brand)
+    <<~PROMPT
+      Jesteś ekspertem copywritingu reklamowego dla marki "#{brand.name}".
+      Ton komunikacji marki: "#{brand.tone_of_voice}".
+
+      Wygeneruj JEDNĄ koncepcję reklamową dla kampanii w mediach społecznościowych.
+
+      Szczegóły kampanii:
+      Produkt: #{campaign.product_name}
+      Grupa docelowa: #{campaign.target_audience}
+      Opis: #{campaign.description}
+
+      WAŻNE:
+      - headline i body muszą być w języku POLSKIM
+      - background_prompt musi być w języku ANGIELSKIM (dla generatora obrazów)
+      - headline: max 8 słów, chwytliwy
+      - body: 1-2 zdania, przekonujące
+      - background_prompt: szczegółowy opis wizualny dla AI generatora obrazów
+
+      Zwróć JSON:
+      {
+        "headline": "Nagłówek po polsku",
+        "body": "Treść reklamy po polsku",
+        "background_prompt": "Detailed image description in English for AI image generator"
+      }
+    PROMPT
   end
 end

@@ -11,11 +11,15 @@ module Creatives
     end
 
     def call
+      if @creative.background_prompt.blank?
+        raise StandardError.new("Brak promptu do generowania obrazu (background_prompt jest pusty)")
+      end
+
       api_key = fetch_api_key
-      model = AppConfig.first&.ai_model || "gemini-2.0-flash-exp"
+      model = AppConfig.first&.ai_model || "gemini-2.5-flash-image"
 
       image_data = case model
-                   when "imagen-3.0-generate-001"
+                   when /^imagen/
                      generate_with_imagen(api_key)
                    else
                      generate_with_gemini(api_key)
@@ -42,7 +46,7 @@ module Creatives
         f.adapter Faraday.default_adapter
       end
 
-      response = conn.post("/v1beta/models/imagen-3.0-generate-001:predict") do |req|
+      response = conn.post("/v1beta/models/imagen-4.0-generate-001:predict") do |req|
         req.body = {
           instances: [
             { prompt: @creative.background_prompt }
@@ -54,13 +58,13 @@ module Creatives
         }.to_json
       end
 
-      validate_response!(response, "Imagen 3")
+      validate_response!(response, "Imagen 4")
 
       response_body = JSON.parse(response.body)
       if response_body['predictions'].blank? || response_body['predictions'][0]['bytesBase64Encoded'].blank?
-         raise "Imagen 3 API returned no image data: #{response_body}"
+         raise "Imagen 4 API returned no image data: #{response_body}"
       end
-      
+
       Base64.decode64(response_body['predictions'][0]['bytesBase64Encoded'])
     end
 
@@ -71,23 +75,29 @@ module Creatives
         f.adapter Faraday.default_adapter
       end
 
-      response = conn.post("/v1beta/models/gemini-2.0-flash-exp:generateContent") do |req|
+      # Use gemini-2.5-flash-image for image generation
+      response = conn.post("/v1beta/models/gemini-2.5-flash-image:generateContent") do |req|
         req.body = {
-          contents: [{ parts: [{ text: "Generate a high quality image: " + @creative.background_prompt }] }]
+          contents: [{ parts: [{ text: @creative.background_prompt }] }],
+          generationConfig: {
+            responseModalities: ["IMAGE"]
+          }
         }.to_json
       end
 
       validate_response!(response, "Gemini 2.0")
 
       response_body = JSON.parse(response.body)
-      
-      # Spec: json['candidates'][0]['content']['parts'][0]['inlineData']['data']
-      candidate = response_body.dig('candidates', 0, 'content', 'parts', 0)
-      if candidate.nil? || candidate['inlineData'].nil?
+
+      # Find the part containing image data
+      parts = response_body.dig('candidates', 0, 'content', 'parts') || []
+      image_part = parts.find { |p| p['inlineData'].present? }
+
+      if image_part.nil?
          raise "Gemini 2.0 API returned no image data: #{response_body}"
       end
 
-      Base64.decode64(candidate['inlineData']['data'])
+      Base64.decode64(image_part['inlineData']['data'])
     end
 
     def validate_response!(response, provider)
@@ -133,6 +143,8 @@ module Creatives
           filename: "creative_#{@creative.id}.png",
           content_type: "image/png"
         )
+
+        @creative.update!(status: :generated)
       end
     end
   end

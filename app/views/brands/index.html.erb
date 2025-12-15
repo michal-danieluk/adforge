@@ -1,12 +1,12 @@
-<% content_for :title, "Brands" %>
+<% content_for :title, "Marki" %>
 
 <div class="w-full">
   <div class="flex justify-between items-center mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-zinc-900">Brands</h1>
-      <p class="mt-1 text-sm text-zinc-500">Manage your brand identities</p>
+      <h1 class="text-3xl font-bold text-zinc-900">Marki</h1>
+      <p class="mt-1 text-sm text-zinc-500">Zarządzaj tożsamością swoich marek</p>
     </div>
-    <%= link_to "+ New Brand", new_brand_path, class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
+    <%= link_to "+ Nowa Marka", new_brand_path, class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
   </div>
 
   <% if @brands.any? %>
@@ -39,7 +39,7 @@
               <!-- Brand details -->
               <div class="space-y-2 text-sm">
                 <div class="flex items-center gap-2 text-zinc-500">
-                  <span class="capitalize"><%= brand.tone_of_voice || "No tone set" %></span>
+                  <span class="capitalize"><%= brand.tone_of_voice || "Brak tonu" %></span>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="text-xs text-zinc-400 mt-3">
-                  <%= pluralize(brand.campaigns.count, 'campaign') %>
+                  <%= brand.campaigns.count %> <%= brand.campaigns.count == 1 ? 'kampania' : brand.campaigns.count < 5 ? 'kampanie' : 'kampanii' %>
                 </div>
               </div>
             </div>
@@ -65,13 +65,13 @@
       </svg>
 
       <h3 class="mt-4 text-lg font-semibold text-zinc-900">
-        No brands yet
+        Brak marek
       </h3>
       <p class="mt-2 text-sm text-zinc-500 max-w-sm mx-auto">
-        Get started by creating your first brand identity with colors, logos, and tone of voice.
+        Zacznij od stworzenia pierwszej tożsamości marki z kolorami, logo i tonem komunikacji.
       </p>
 
-      <%= link_to "+ Create First Brand", new_brand_path, class: "mt-6 inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
+      <%= link_to "+ Stwórz pierwszą markę", new_brand_path, class: "mt-6 inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-md shadow-sm transition-colors" %>
     </div>
   <% end %>
 </div>

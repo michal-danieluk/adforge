@@ -9,7 +9,7 @@ class BrandsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get brands_url
     assert_response :success
-    assert_select "h1", "Brands"
+    assert_select "h1", "Marki"
   end
 
   test "should get new" do

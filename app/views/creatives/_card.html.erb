@@ -34,8 +34,18 @@
 
     <!-- Status Badge -->
     <div class="flex items-center justify-between mt-4 pt-3 border-t border-zinc-100">
-      <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium <%= creative.generated? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
-        <%= creative.status.titleize %>
+      <% status_classes = case creative.status
+         when "generated" then "bg-green-100 text-green-800"
+         when "failed" then "bg-red-100 text-red-800"
+         else "bg-yellow-100 text-yellow-800"
+         end
+         status_text = case creative.status
+         when "generated" then "Gotowe"
+         when "failed" then "Błąd Generowania"
+         else "Oczekujące"
+         end %>
+      <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium <%= status_classes %>">
+        <%= status_text %>
       </span>
       <span class="text-xs text-zinc-400">
         <%= time_ago_in_words(creative.created_at) %> temu

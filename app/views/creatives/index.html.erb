@@ -3,15 +3,15 @@
   <div class="flex justify-between items-center mb-6">
     <div>
       <h1 class="text-3xl font-bold text-gray-900">
-        Ads for <%= @campaign.product_name %>
+        Reklamy dla <%= @campaign.product_name %>
       </h1>
       <p class="text-gray-600 mt-1 text-sm">
-        <%= link_to @campaign.brand.name, @campaign.brand, class: "text-blue-600 hover:underline" %> ·
-        <%= link_to "Campaign Details", @campaign, class: "text-blue-600 hover:underline" %>
+        <%= link_to @campaign.brand.name, @campaign.brand, class: "text-indigo-600 hover:underline" %> ·
+        <%= link_to "Szczegóły kampanii", @campaign, class: "text-indigo-600 hover:underline" %>
       </p>
     </div>
 
-    <%= button_to "+ Generate New Ad",
+    <%= button_to "+ Wygeneruj nową reklamę",
                   campaign_creatives_path(@campaign),
                   method: :post,
                   class: "bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 ring-2 ring-indigo-500 ring-offset-2 font-semibold text-sm transition-colors" %>
@@ -25,18 +25,18 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
       <h3 class="mt-4 text-lg font-semibold text-gray-900">
-        No ads generated yet
+        Brak wygenerowanych reklam
       </h3>
       <p class="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
-        Click "Generate New Ad" to create your first AI-powered social media ad.
-        It takes about 30 seconds.
+        Kliknij "Wygeneruj nową reklamę", aby stworzyć pierwszą reklamę do social media z pomocą AI.
+        To zajmie około 30 sekund.
       </p>
-      <%= button_to "⚡ Generate First Ad",
+      <%= button_to "Wygeneruj pierwszą reklamę",
                     campaign_creatives_path(@campaign),
                     method: :post,
                     class: "mt-6 inline-block rounded-md px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2" %>
       <p class="mt-4 text-xs text-gray-400">
-        AI-powered ads that match your brand perfectly
+        Reklamy generowane przez AI, idealnie dopasowane do Twojej marki
       </p>
     </div>
   <% else %>
@@ -68,12 +68,22 @@
             <!-- Info -->
             <div class="p-4">
               <p class="text-sm text-gray-500">
-                Created <%= time_ago_in_words(creative.created_at) %> ago
+                Utworzono <%= time_ago_in_words(creative.created_at) %> temu
               </p>
 
               <!-- Status Badge -->
-              <span class="inline-block mt-2 px-2 py-1 text-xs rounded font-medium <%= creative.generated? ? 'bg-green-100 text-green-800' : creative.failed? ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
-                <%= creative.status.titleize %>
+              <% status_classes = case creative.status
+                 when "generated" then "bg-green-100 text-green-800"
+                 when "failed" then "bg-red-100 text-red-800"
+                 else "bg-yellow-100 text-yellow-800"
+                 end
+                 status_text = case creative.status
+                 when "generated" then "Gotowe"
+                 when "failed" then "Błąd"
+                 else "Oczekujące"
+                 end %>
+              <span class="inline-block mt-2 px-2 py-1 text-xs rounded font-medium <%= status_classes %>">
+                <%= status_text %>
               </span>
 
               <!-- Body Preview -->
@@ -95,7 +105,7 @@
       <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
-      Back to Campaign
+      Wróć do kampanii
     <% end %>
   </div>
 </div>

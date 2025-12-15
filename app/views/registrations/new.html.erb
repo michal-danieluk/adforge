@@ -1,12 +1,12 @@
 <div class="mx-auto md:w-2/3 w-full">
   <div class="max-w-md mx-auto mt-12">
     <div class="bg-white shadow-lg rounded-lg p-8">
-      <h1 class="font-bold text-3xl mb-6">Sign Up</h1>
+      <h1 class="font-bold text-3xl mb-6">Zarejestruj się</h1>
 
       <%= form_with model: @user, url: registration_path, class: "space-y-5" do |form| %>
         <% if @user.errors.any? %>
           <div class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md">
-            <h2 class="font-bold mb-2"><%= pluralize(@user.errors.count, "error") %> prohibited this account from being saved:</h2>
+            <h2 class="font-bold mb-2">Nie udało się zapisać konta:</h2>
             <ul class="list-disc ml-6">
               <% @user.errors.each do |error| %>
                 <li><%= error.full_message %></li>
@@ -17,30 +17,30 @@
 
         <div>
           <%= form.label :email_address, "Email", class: "block font-medium mb-1" %>
-          <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "your@email.com", class: "w-full border rounded px-3 py-2" %>
+          <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "twoj@email.com", class: "w-full border rounded px-3 py-2" %>
         </div>
 
         <div>
-          <%= form.label :password, class: "block font-medium mb-1" %>
-          <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter password", maxlength: 72, class: "w-full border rounded px-3 py-2" %>
+          <%= form.label :password, "Hasło", class: "block font-medium mb-1" %>
+          <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Wpisz hasło", maxlength: 72, class: "w-full border rounded px-3 py-2" %>
         </div>
 
         <div>
-          <%= form.label :password_confirmation, "Confirm Password", class: "block font-medium mb-1" %>
-          <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm password", maxlength: 72, class: "w-full border rounded px-3 py-2" %>
+          <%= form.label :password_confirmation, "Potwierdź hasło", class: "block font-medium mb-1" %>
+          <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Potwierdź hasło", maxlength: 72, class: "w-full border rounded px-3 py-2" %>
         </div>
 
         <div>
-          <%= form.submit "Sign Up", class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-md font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2 cursor-pointer" %>
+          <%= form.submit "Zarejestruj się", class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-md font-semibold text-sm transition-colors ring-2 ring-indigo-500 ring-offset-2 cursor-pointer" %>
         </div>
       <% end %>
 
       <div class="mt-6 text-center text-sm text-gray-600">
-        Already have an account? <%= link_to "Log in", new_session_path, class: "text-blue-600 hover:underline font-medium" %>
+        Masz już konto? <%= link_to "Zaloguj się", new_session_path, class: "text-indigo-600 hover:underline font-medium" %>
       </div>
 
       <p class="mt-4 text-center text-xs text-gray-400">
-        Join marketers creating on-brand ads in minutes
+        Dołącz do marketerów tworzących reklamy zgodne z marką w minuty
       </p>
     </div>
   </div>
